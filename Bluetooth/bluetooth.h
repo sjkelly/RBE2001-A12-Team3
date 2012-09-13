@@ -21,11 +21,11 @@ enum buffer
 //we should also think about adding our own types of messages to this, because we can define our own 
 //messages and communicate with the robot
 enum btType {STORAGE_TUBE = 0x01, 
-	    SUPPLY_TUBE = 0x02, 
-	    RADIATION_ALERT = 0x04, 
-	    STOP_MOVEMENT = 0x05, 
-	    RESUME_MOVEMENT = 0x06, 
-	    ROBOT_STATUS = 0x07};
+	     SUPPLY_TUBE = 0x02, 
+	     RADIATION_ALERT = 0x04, 
+	     STOP_MOVEMENT = 0x05, 
+	     RESUME_MOVEMENT = 0x06, 
+	     ROBOT_STATUS = 0x07};
 
 //another enum for radiation levels
 enum btRadiation {SPENT = 0x2C, 
@@ -42,7 +42,9 @@ int btID;
 //this could be our buffer for storing bluetooth messages. We have to make sure we fill them as big
 //endian. 300 is just a rounnd number that is above the maximum message size, and is a round number. 
 //we should reduce this to gain some extra memory, it's kindof absurdly high right now.
-char btBuffer[300];
+union btBuffer
+{
+  char btBuffer[300];
 
 //This is the Init function, it should be called during void setup()
 //we should add an exeption to all of these in order to ensure that everyting initializes properly
