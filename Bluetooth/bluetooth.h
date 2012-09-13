@@ -59,3 +59,5 @@ void btHandle(char *btMessage, *buffer aBuffer);
 //should be able to tell what it should be based on the message type. once again, this should throw an 
 //exception upon failure
 void btSend(btType type, char *data, char destination = 0x00);
+
+#endif
