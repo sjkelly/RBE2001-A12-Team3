@@ -1,6 +1,6 @@
 #ifndef ___BLUETOOTH___
 #define ___BLUETOOTH___
-
+#include "Arduino.h"
 /*************
 The purpose of this file is to provide an easy to use interface for sending and
 recieving bluetooth messages from the master field coordinator. 
@@ -31,35 +31,38 @@ enum btType {STORAGE_TUBE = 0x01,
 enum btRadiation {SPENT = 0x2C, 
 		  NEW = 0xFF};
 
-
+class btInterface
+{
+ private:
 //and another enum for robot status
 //this is so dumb that I'm not even going to attempt to come up with names for these, we'll figure it out later
 //enum btRobotStatus 
 
 //btID should represent our bluetooth id. I made it a variable so that it could be changed on runtime
-int btID;
+   int btID;
 
 //this could be our buffer for storing bluetooth messages. We have to make sure we fill them as big
 //endian. 300 is just a rounnd number that is above the maximum message size, and is a round number. 
 //we should reduce this to gain some extra memory, it's kindof absurdly high right now.
-union btBuffer
-{
-  char btBuffer[300];
+   char btBuffer[300];
 
 //This is the Init function, it should be called during void setup()
-//we should add an exeption to all of these in order to ensure that everyting initializes properly
-initBluetooth();
+ //we should add an exeption to all of these in order to ensure that everyting initializes properly
+  initBluetooth();
+//btSend will be fore when the robot has to send out a message. it accepts a message type, and a pointer to
+//the message data. I've also decided to include optional destination arguments, however we 
+//should be able to tell what it should be based on the message type. once again, this should throw an 
+//exception upon failure
+ public:
+  btInterface(int _btID);
+  void btRecieve();
+  void btSend(btType type, char *data, char destination);
 
 //btHandle will handle the bluetooth message. It takes a pointer to a bluetooth message, and optionally 
 //a pointer to a response buffer (right now It's just a buffer enum, howver it can represent something 
 //like our action buffer) It should throw an exeption if something went wrong i.e. if the checksum doesn't 
 //match the message, although if that happens frequently we should use a faster method of error checking
-void btHandle(char *btMessage, *buffer aBuffer);
+  void btHandle(char *btMessage);
 
-//btSend will be fore when the robot has to send out a message. it accepts a message type, and a pointer to
-//the message data. I've also decided to include optional destination arguments, however we 
-//should be able to tell what it should be based on the message type. once again, this should throw an 
-//exception upon failure
-void btSend(btType type, char *data, char destination = 0x00);
-
+};
 #endif
