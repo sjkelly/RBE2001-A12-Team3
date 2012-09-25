@@ -1,13 +1,3 @@
-struct Robot {
-	int8_t move;
-	int8_t 
-
-
-}robot;
-
-
-
-
 /*** Pin Definitions ***/
 #define CLAW_SERVO
 #define ELEVATOR_SERVO
@@ -20,6 +10,12 @@ struct Robot {
 #define RIGHT_ENCODER
 
 #define WARNING_LIGHT
-//WTF does the line tracker look like
+
+#define LINE_SENSOR_FL 22
+#define LINE_SENSOR_FC 23 
+#define LINE_SENSOR_FR 24
+#define LINE_SENSOR_BL 25
+#define LINE_SENSOR_BC 26
+#define LINE_SENSOR_BR 27
 
 
