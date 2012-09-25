@@ -1,20 +1,5 @@
-//Code for the QRE1113 Digital board
-//Outputs via the serial terminal - Lower numbers mean more reflected
-//3000 or more means nothing was reflected.
-#include <avr/io.h>
+#include "linesensor.h"
 
-#define LINE_SENSOR_COUNT 6 //don't change this really. you will break the member vars.
-#define CHARGE_MICROS 10  //How long we charge the capacitor
-#define READ_MICROS 1000 //How long we wait between 
-
-class lineSensor{
-  public:
-  lineSensor();
-  void update();
-  void print();
-  int sensor[LINE_SENSOR_COUNT];
-  int frontLeft, frontRight, frontCenter, rearLeft, rearRight, rearCenter;
-};
 
 lineSensor::lineSensor(){ 
 }
@@ -49,19 +34,3 @@ void lineSensor::print(){
     sensor[i] = 0;
   }
 }
-
-lineSensor mySensor;
-void setup(){
-  Serial.begin(9600);
-  
-}
-
-
-void loop(){
-    mySensor.update();
-    mySensor.print();
-    Serial.print('\n');
-}
-
-
-
