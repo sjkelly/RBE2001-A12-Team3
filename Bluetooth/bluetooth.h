@@ -1,5 +1,6 @@
 #ifndef ___BLUETOOTH___
 #define ___BLUETOOTH___
+#define MAX_MESSAGE_SIZE 300
 #include "Arduino.h"
 /*************
 The purpose of this file is to provide an easy to use interface for sending and
@@ -22,10 +23,12 @@ enum buffer
 //messages and communicate with the robot
 enum btType {STORAGE_TUBE = 0x01, 
 	     SUPPLY_TUBE = 0x02, 
-	     RADIATION_ALERT = 0x04, 
-	     STOP_MOVEMENT = 0x05, 
-	     RESUME_MOVEMENT = 0x06, 
-	     ROBOT_STATUS = 0x07};
+	     RADIATION_ALERT = 0x03, 
+	     STOP_MOVEMENT = 0x04, 
+	     RESUME_MOVEMENT = 0x05, 
+	     ROBOT_STATUS = 0x06,
+             HEARTBEAT = 0x07};
+
 
 //another enum for radiation levels
 enum btRadiation {SPENT = 0x2C, 
@@ -44,7 +47,7 @@ class btInterface
 //this could be our buffer for storing bluetooth messages. We have to make sure we fill them as big
 //endian. 300 is just a rounnd number that is above the maximum message size, and is a round number. 
 //we should reduce this to gain some extra memory, it's kindof absurdly high right now.
-   char btBuffer[300];
+   char btBuffer[MAX_MESSAGE_SIZE];
 
 //This is the Init function, it should be called during void setup()
  //we should add an exeption to all of these in order to ensure that everyting initializes properly
