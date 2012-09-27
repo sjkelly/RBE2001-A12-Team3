@@ -1,6 +1,7 @@
 #ifndef ___BLUETOOTH___
 #define ___BLUETOOTH___
 #define MAX_MESSAGE_SIZE 300
+#include <stdint.h>
 #include "Arduino.h"
 /*************
 The purpose of this file is to provide an easy to use interface for sending and
@@ -42,12 +43,12 @@ class btInterface
 //enum btRobotStatus 
 
 //btID should represent our bluetooth id. I made it a variable so that it could be changed on runtime
-   int btID;
+   uint16_t btID;
 
 //this could be our buffer for storing bluetooth messages. We have to make sure we fill them as big
 //endian. 300 is just a rounnd number that is above the maximum message size, and is a round number. 
 //we should reduce this to gain some extra memory, it's kindof absurdly high right now.
-   char btBuffer[MAX_MESSAGE_SIZE];
+   uint8_t btBuffer[MAX_MESSAGE_SIZE];
 
 //This is the Init function, it should be called during void setup()
  //we should add an exeption to all of these in order to ensure that everyting initializes properly
@@ -57,15 +58,15 @@ class btInterface
 //should be able to tell what it should be based on the message type. once again, this should throw an 
 //exception upon failure
  public:
-  btInterface(int _btID);
+  btInterface(uint16_t _btID);
   void btRecieve();
-  void btSend(btType type, char *data, char destination);
+  void btSend(btType type, uint8_t *data, uint8_t destination);
 
-//btHandle will handle the bluetooth message. It takes a pointer to a bluetooth message, and optionally 
-//a pointer to a response buffer (right now It's just a buffer enum, howver it can represent something 
+//btHandle will handle the bluetooth message. It takes a point16er to a bluetooth message, and optionally 
+//a point16er to a response buffer (right now It's just a buffer enum, howver it can represent something 
 //like our action buffer) It should throw an exeption if something went wrong i.e. if the checksum doesn't 
 //match the message, although if that happens frequently we should use a faster method of error checking
-  void btHandle(char *btMessage);
+  void btHandle(uint8_t *btMessage);
 
 };
 #endif
