@@ -10,14 +10,14 @@
 
 #define LINE_SENSOR_COUNT 6 //don't change this really. you will break the member vars.
 #define CHARGE_MICROS 10  //How long we charge the capacitor
-#define READ_MICROS 1000 //How long we wait between 
+#define READ_MICROS 1500 //How long we wait between 
 
 class lineSensor{
   public:
   lineSensor();
   void update();
   void print();
-  int frontLeft, frontRight, frontCenter, backLeft, backRight, backCenter;
+  int sensor[LINE_SENSOR_COUNT];
+  int frontLeft, frontRight, frontCenter, rearLeft, rearRight, rearCenter;
 };
-
 #endif
