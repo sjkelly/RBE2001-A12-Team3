@@ -3,7 +3,7 @@ Motor::Motor(int8_t _encPin, int8_t _drivePin, bool _reverse);
  encPin = _encPin;
  drivePin = _drivePin;
  reverse = _reverse;
- attachInterrupt(_encPin, log, RISING);
+ //attachInterrupt(_encPin, log, RISING);
 }
  
 void Motor::drive(int16_t speed)

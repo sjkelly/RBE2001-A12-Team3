@@ -13,8 +13,8 @@ struct Robot {
 #define ELEVATOR_SERVO
 #define WRIST_SERVO
 
-#define LEFT_DRIVE
-#define RIGHT_DRIVE
+#define LEFT_DRIVE 31
+#define RIGHT_DRIVE 32
 
 #define LEFT_ENCODER
 #define RIGHT_ENCODER
