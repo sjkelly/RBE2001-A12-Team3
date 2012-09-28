@@ -1,7 +1,7 @@
 #include "move.h"
 
 
-Motor(int8_t _encPin, int8_t _drivePin, int8_t _oneA, int8_t _twoA, bool _reverse);
+Motor::Motor(int8_t _encPin, int8_t _drivePin, int8_t _oneA, int8_t _twoA, bool _reverse)
 {
  encPin = _encPin;
  drivePin = _drivePin;
