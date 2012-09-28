@@ -12,8 +12,9 @@ void setup(){
 }
 
 void loop(){
-  myLineSensor.update();
   if(DEBUG)myLineSensor.print();
-  leftMotor.drive(255);
+  myLineSensor.update();
+ // leftMotor.drive(255);
+  //rightMotor.drive(255);
   followLine(255, myLineSensor.sensor[0], myLineSensor.sensor[1], myLineSensor.sensor[2], rightMotor, leftMotor);
 }
