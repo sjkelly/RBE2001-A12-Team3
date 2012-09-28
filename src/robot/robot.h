@@ -1,3 +1,8 @@
+
+
+/*** Use Options ***/
+#define DEBUG 1
+
 /*** Pin Definitions ***/
 #define CLAW_SERVO
 #define ELEVATOR_SERVO

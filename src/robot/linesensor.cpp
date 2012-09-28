@@ -1,5 +1,5 @@
 #include "linesensor.h"
-
+#include "robot.h"
 
 lineSensor::lineSensor(){ 
 }
@@ -19,18 +19,25 @@ inline void lineSensor::update(){
 
   //time how long the input is HIGH, but quit after 3ms as nothing happens after that
   while (micros() - time < READ_MICROS){
-   if(!digitalRead(2)&&!sensor[0]) sensor[0] = 1; 
-   if(!digitalRead(3)&&!sensor[1]) sensor[1] = 1; 
-   if(!digitalRead(4)&&!sensor[2]) sensor[2] = 1; 
-   if(!digitalRead(5)&&!sensor[3]) sensor[3] = 1; 
-   if(!digitalRead(6)&&!sensor[4]) sensor[4] = 1; 
-   if(!digitalRead(7)&&!sensor[5]) sensor[5] = 1; 
+   if(!digitalRead(LINE_SENSOR_FL)&&!frontLeft) frontLeft = 1; 
+   if(!digitalRead(LINE_SENSOR_FC)&&!frontCenter) frontCenter = 1; 
+   if(!digitalRead(LINE_SENSOR_FR)&&!frontRight) frontRight = 1; 
+   if(!digitalRead(LINE_SENSOR_BL)&&!backLeft) backLeft = 1; 
+   if(!digitalRead(LINE_SENSOR_BC)&&!backCenter) backCenter = 1; 
+   if(!digitalRead(LINE_SENSOR_BR)&&!backRight) backRight = 1; 
   }
 }
 void lineSensor::print(){
-  int i;
-  for(i=0; i<LINE_SENSOR_COUNT; i++){
-    Serial.print(sensor[i]);
-    sensor[i] = 0;
-  }
+	Serial.print("\tFL:");
+  Serial.print(frontLeft);
+	Serial.print("FC:");
+	Serial.print(frontCenter);
+	Serial.print("FR:");
+	Serial.print(frontRight);
+	Serial.print("BL:");
+	Serial.print(backLeft);
+	Serial.print("BC:");
+	Serial.print(backCenter);
+	Serial.print("BR:");
+	Serial.print(backRight);
 }
