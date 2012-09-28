@@ -15,14 +15,14 @@ void Motor::drive(int16_t speed)
 {
  if(speed > 0)
  {
-  digitalWrite(HBRIDGE1, 0);
-  digitalWrite(HBRIDGE2, 1);
+  digitalWrite(oneA, 0);
+  digitalWrite(twoA, 1);
  }
  else
  {
   speed *= -1;
-  digitalWrite(HBRIDGE2, 0);
-  digitalWrite(HBRIDGE1, 1);
+  digitalWrite(twoA, 0);
+  digitalWrite(oneA, 1);
  }
  analogWrite(drivePin, speed);
 }
