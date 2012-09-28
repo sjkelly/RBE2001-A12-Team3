@@ -19,7 +19,7 @@ void Motor::drive(int16_t speed)
   digitalWrite(HBRIDGE2, 0);
   digitalWrite(HBRIDGE1, 1);
  }
- analogWrite(side ,speed);
+ analogWrite(drivePin, speed);
 }
 void Motor::log()
 {
