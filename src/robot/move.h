@@ -5,14 +5,22 @@
 #define ENABLE 5
 #include "Arduino.h"
 #include <stdlib.h>
-enum direct {FORWARD, BACKWARD};
-enum motor  {LEFT, RIGHT};
 
-
+class Motor
+{
+ private:
+  int16_t ticks;
+  uint8_t speed;
+  bool reverse;
+  int8_t drivePin, encPin;
+ public:
+  Motor(int8_t _encPin, int8_t _drivePin, bool _reverse);
+  void drive(int16_t speed);
+  void log();
+}
 //namespace move
 //{
-driveMotor(int16_t speed, motor side);
 
-  
+void followLine(int16_t speed, bool leftSensor, bool midSensor, bool rightSensor);  
 
 #endif
