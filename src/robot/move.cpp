@@ -1,11 +1,13 @@
 #include "move.h"
 
 
-Motor::Motor(int8_t _encPin, int8_t _drivePin, bool _reverse)
+Motor(int8_t _encPin, int8_t _drivePin, int8_t _oneA, int8_t _twoA, bool _reverse);
 {
  encPin = _encPin;
  drivePin = _drivePin;
  reverse = _reverse;
+ oneA = _oneA;
+ twoA = _twoA;
  //attachInterrupt(_encPin, log, RISING);
 }
  
