@@ -1,5 +1,6 @@
 #include "linesensor.h"
 #include "robot.h"
+#include "Arduino.h"
 
 lineSensor::lineSensor(){ 
 }

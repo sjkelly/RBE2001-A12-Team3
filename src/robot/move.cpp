@@ -1,4 +1,7 @@
-Motor::Motor(int8_t _encPin, int8_t _drivePin, bool _reverse);
+#include "move.h"
+
+
+Motor::Motor(int8_t _encPin, int8_t _drivePin, bool _reverse)
 {
  encPin = _encPin;
  drivePin = _drivePin;

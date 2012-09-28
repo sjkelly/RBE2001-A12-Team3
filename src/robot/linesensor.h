@@ -17,7 +17,7 @@ class lineSensor{
   lineSensor();
   void update();
   void print();
-  int frontLeft, frontRight, frontCenter, rearLeft, rearRight, rearCenter;
+  int frontLeft, frontRight, frontCenter, backLeft, backRight, backCenter;
 };
 
 #endif
