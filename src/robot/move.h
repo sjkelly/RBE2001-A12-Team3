@@ -17,7 +17,7 @@ class Motor
   Motor(int8_t _encPin, int8_t _drivePin, bool _reverse);
   void drive(int16_t speed);
   void log();
-}
+};
 //namespace move
 //{
 

@@ -1,8 +1,7 @@
-#include "states.h"
+#include "robot.h"
 
 void setup(){
-  
-  
+  Serial.begin(9600);
   
 }
 
