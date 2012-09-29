@@ -27,7 +27,7 @@ class lineSensor
    static void updateAll();
    void update();
    uint16_t read();
-   void static readAll();
+   static void readAll();
    uint8_t getValue();
    uint8_t setValue();
    bool seeLine();
