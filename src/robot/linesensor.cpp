@@ -8,15 +8,15 @@ lineSensor::lineSensor(uint8_t _pin, uint16_t _threshold);
  threshold = threshold; 
 }
 
-static void lineSensor::update(){
+void lineSensor::update(){
   //Returns value from the QRE1113 
   //Lower numbers mean more refleacive
   //More than 3000 means nothing was reflected.
   //pinMode( QRE1113_Pin, OUTPUT );
-  DDRA = B00111111;
-  PORTA = B00111111;
+   pinMode(pin, OUTPUT);
+   digitalWrite(pin, HIGH);
   //digitalWrite( QRE1113_Pin, HIGH );
-  DDRA = B0000000;
+   pinMode(pin, INPUT);
   delayMicroseconds(CHARGE_MICROS);
   //pinMode( QRE1113_Pin, INPUT );
   uint32_t time = micros();
@@ -24,7 +24,7 @@ static void lineSensor::update(){
   //time how long the input is HIGH, but quit after 3ms as nothing happens after that
   while (micros() - time < READ_MICROS)
   {
-   if(!digitalRead(pin)&&!state)
+   if(!digitalRead(22)&&!state)
     value = micros() - time; 
   }
 }
@@ -39,6 +39,12 @@ bool lineSensor::seeLine()
 }
 
 void lineSensor::print(){
-  Serial.print(sensor[i]);
+  int i;
+  for(i=0; i<LINE_SENSOR_COUNT; i++){
+    Serial.print(sensor[i]);
+    Serial.print(' ');
+    sensor[i] = 0;
+  }
+  Serial.print('\n');
 }
 
