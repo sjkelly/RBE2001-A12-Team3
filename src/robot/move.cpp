@@ -36,7 +36,7 @@ void Motor::log()
   ticks--;
 }
 
-void followLine(int16_t speed, int leftSensor, int midSensor, int rightSensor, Motor right, Motor left)
+void followLine(int16_t speed, uint8_t leftSensor, uint8_t midSensor, uint8_t rightSensor, Motor right, Motor left)
 {
  if(!midSensor)
  {
@@ -54,3 +54,4 @@ void followLine(int16_t speed, int leftSensor, int midSensor, int rightSensor, M
   right.drive(0);
  }
 }
+

@@ -21,6 +21,7 @@ class Motor
 //namespace move
 //{
 
-void followLine(int16_t speed, int leftSensor, int midSensor, int rightSensor, Motor, Motor);  
+void followLine(int16_t speed, uint8_t leftSensor, uint8_t midSensor, uint8_t rightSensor, Motor, Motor);  
 
 #endif
+
