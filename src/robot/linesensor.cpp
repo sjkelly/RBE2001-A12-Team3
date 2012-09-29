@@ -6,7 +6,7 @@ lineSensor::lineSensor(uint8_t _pin, uint16_t _threshold)
 { 
  pin = _pin;
  threshold = threshold; 
- next = null;
+ next = NULL;
  last->next = this;
  last = this;
 }
@@ -53,7 +53,8 @@ void lineSensor::update()
   //Lower numbers mean more refleacive
   //More than 3000 means nothing was reflected.
   //pinMode( QRE1113_Pin, OUTPUT );
-  for(i = this; i != NULL; i = next)
+  lineSensor *i;
+  for(i = this; i != NULL; i = i->next)
   {
    pinMode(i->getPin(), OUTPUT);
    digitalWrite(i->getPin(), HIGH);
