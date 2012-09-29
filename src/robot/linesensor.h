@@ -12,12 +12,16 @@
 #define CHARGE_MICROS 10  //How long we charge the capacitor
 #define READ_MICROS 1500 //How long we wait between 
 
-class lineSensor{
+class lineSensor
+{
+  private:
+   uint8_t pin;
+   uint16_t value, threshold;
   public:
-  lineSensor();
-  void update();
-  void print();
-  int sensor[LINE_SENSOR_COUNT];
-  int frontLeft, frontRight, frontCenter, rearLeft, rearRight, rearCenter;
+   lineSensor(uint8_t pin, uint16_t _threshold);
+   void update();
+   uint8_t getValue();
+   bool seeLine();
+   void print();
 };
 #endif
