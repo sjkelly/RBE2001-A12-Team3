@@ -2,7 +2,7 @@
 #include "robot.h"
 #include "Arduino.h"
 
-lineSensor::lineSensor(uint8_t _pin, uint16_t _threshold);
+lineSensor::lineSensor(uint8_t _pin, uint16_t _threshold)
 { 
  pin = _pin;
  threshold = threshold; 
@@ -24,11 +24,11 @@ void lineSensor::update(){
   //time how long the input is HIGH, but quit after 3ms as nothing happens after that
   while (micros() - time < READ_MICROS)
   {
-   if(!digitalRead(22)&&!state)
+   if(!digitalRead(22)&&!value)
     value = micros() - time; 
   }
 }
-int lineSensor::getValue()
+uint8_t lineSensor::getValue()
 {
  return value;
 }
