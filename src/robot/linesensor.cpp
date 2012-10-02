@@ -2,7 +2,12 @@
 #include "robot.h"
 #include "Arduino.h"
 
-LineSensor::LineSensor(){ 
+LineSensor::LineSensor(){
+}
+
+LineSensor::LineSensor(uint16_t _charge, uint16_t _read){ 
+  charge = _charge;
+  read = _read;
 }
 
 void LineSensor::update(){
@@ -10,11 +15,11 @@ void LineSensor::update(){
   DDRA = B00111111; //Set to output
   PORTA = B00111111; //write to output
   DDRA = B00000000; //set to input
-  delayMicroseconds(LINE_SENSOR_CHARGE_US); //Wait for a 
+  delayMicroseconds(charge); //Wait for a 
   
   uint32_t time = micros();
   
-  while (micros() - time < LINE_SENSOR_READ_US) state = PINA; 
+  while (micros() - time < read) state = PINA; 
   
   frontLeft = state & B00000001;
   frontRight = state & B00000010;
@@ -23,11 +28,6 @@ void LineSensor::update(){
   rearRight = state & B00010000;
   rearCenter = state & B00100000;
   
-}
-
-void LineSensor::print(){
-  Serial.print("Line Sensor States:");
-  Serial.println(state,BIN);
 }
 
 /*#include "sensor.h"

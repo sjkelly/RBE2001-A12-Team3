@@ -12,10 +12,12 @@
 class LineSensor{
   public:
   LineSensor();
+  LineSensor(uint16_t,uint16_t);
   void update();
-  void print();
   uint8_t state;
   uint8_t frontLeft, frontRight, frontCenter, rearLeft, rearRight, rearCenter;
+  private:
+  uint16_t charge, read;
 };
 #endif
 
