@@ -1,14 +1,19 @@
 #include "motor.h"
 
-Motor::Motor(int8_t _encPin, int8_t _drivePin, int8_t _oneA, int8_t _twoA, bool _reverse)
+Motor::Motor(){
+}
+
+Motor::Motor(int8_t _encPin, int8_t _drivePin, int8_t _oneA, int8_t _twoA)
 {
  pinMode(_oneA, OUTPUT);
  pinMode(_twoA, OUTPUT);
+ pinMode(_encPin, INPUT);
  encPin = _encPin;
  drivePin = _drivePin;
- reverse = _reverse;
  oneA = _oneA;
  twoA = _twoA;
+ count = 0;
+ interruptPin = (encPin == 2)?0:(encPin == 3)?1:(encPin == 21)?2:(encPin == 20)?3:(encPin == 19)?4:(encPin == 18)?5:0;
 }
  
 void Motor::drive(int16_t speed)
@@ -31,3 +36,6 @@ float Motor::getDistance(void){
   return (float)count/ENCODER_CPR*2*PI*WHEEL_RADIUS_CM;
 }
 
+void Motor::encoderISR(){
+  count++;
+}
