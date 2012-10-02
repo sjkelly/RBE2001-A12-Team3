@@ -1,10 +1,15 @@
 #ifndef __MOVEH__
 #define __MOVEH__
+#include "Arduino.h"
+#include <stdlib.h>
+
 #define HBRIDGE1 3
 #define HBRIDGE2 4
 #define ENABLE 5
-#include "Arduino.h"
-#include <stdlib.h>
+
+//Tuning Defines
+#define RIGHT_LINE_FOLLOW_PROP 0.7
+#define LEFT_LINE_FOLLOW_PROP 0.5
 
 class Motor
 {
@@ -18,10 +23,13 @@ class Motor
   void drive(int16_t speed);
   void log();
 };
-//namespace move
-//{
 
-void followLine(int16_t speed, uint8_t leftSensor, uint8_t midSensor, uint8_t rightSensor, Motor, Motor);  
+namespace Move
+{
+  volatile extern uint8_t bumperHit;
+  volatile extern uint32_t leftCount, rightCount;
+  void followLine(int16_t speed, uint8_t leftSensor, uint8_t midSensor, uint8_t rightSensor, Motor, Motor);  
+}
 
 #endif
 

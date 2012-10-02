@@ -36,22 +36,31 @@ void Motor::log()
   ticks--;
 }
 
-void followLine(int16_t speed, uint8_t leftSensor, uint8_t midSensor, uint8_t rightSensor, Motor right, Motor left)
-{
- if(!midSensor)
- {
-  left.drive(speed);
-  right.drive(speed);
- }
- else if(!rightSensor)
- {
-  right.drive(speed);
-  left.drive(0);
- }
- else if(!leftSensor)
- {
-  left.drive(speed);
-  right.drive(0);
- }
-}
 
+
+namespace Move
+{
+  volatile uint8_t bumperHit;
+  volatile uint32_t leftCount = 0;
+  volatile uint32_t rightCount = 0;
+  
+  void followLine(int16_t speed, uint8_t leftSensor, uint8_t midSensor, uint8_t rightSensor, Motor right, Motor left)
+  {
+   if(!leftSensor&&midSensor&&!rightSensor)
+   {
+    left.drive(speed);
+    right.drive(speed);
+   }
+   else if(rightSensor)
+   {
+    right.drive(speed);
+    left.drive(speed*LEFT_LINE_FOLLOW_PROP);
+   }
+   else if(leftSensor)
+   {
+    left.drive(speed);
+    right.drive(speed*RIGHT_LINE_FOLLOW_PROP);
+   }
+  }
+  
+}
