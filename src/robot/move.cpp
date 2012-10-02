@@ -37,4 +37,22 @@ namespace Move
   uint8_t checkBumper(void){
     return digitalRead(BUMPER_PIN);
   }
+  
+  void turn180(void){
+    float targetDistance = WHEEL_SPACING_CM*PI/2;
+    while(1){
+      
+      
+      
+    }
+  }
+  void turnRight(void){
+    float targetDistance = WHEEL_SPACING_CM*PI/2;   
+    
+  }
+  void turnLeft(void){
+    float targetDistance = WHEEL_SPACING_CM*PI/2;
+    
+    
+  }
 }

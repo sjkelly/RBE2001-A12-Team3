@@ -26,7 +26,7 @@
 
 #define ENCODER_CPR 1856
 #define WHEEL_RADIUS_CM 3.4925
-
+#define WHEEL_SPACING_CM 10
 
 /*** Tuning Defines ***/
 #define RIGHT_LINE_FOLLOW_PROP 0.7
