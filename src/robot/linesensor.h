@@ -9,9 +9,9 @@
 #include <avr/io.h>
 #include "robot.h"
 
-class lineSensor{
+class LineSensor{
   public:
-  lineSensor();
+  LineSensor();
   void update();
   void print();
   uint8_t state;

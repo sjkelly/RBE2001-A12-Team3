@@ -2,10 +2,10 @@
 #include "robot.h"
 #include "Arduino.h"
 
-lineSensor::lineSensor(){ 
+LineSensor::LineSensor(){ 
 }
 
-void lineSensor::update(){
+void LineSensor::update(){
   
   DDRA = B00111111; //Set to output
   PORTA = B00111111; //write to output
@@ -25,7 +25,7 @@ void lineSensor::update(){
   
 }
 
-void lineSensor::print(){
+void LineSensor::print(){
   Serial.print("Line Sensor States:");
   Serial.println(state,BIN);
 }

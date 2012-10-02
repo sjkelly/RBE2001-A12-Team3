@@ -3,7 +3,7 @@
 #include "move.h"
 #include "motor.h"
 
-lineSensor myLineSensor;
+LineSensor lineSensor;
 Motor leftMotor(19,8,33,34,1);
 Motor rightMotor(29,9,35,36,1);
 
@@ -22,7 +22,7 @@ void setup(){
 
 void loop(){
   if(DEBUG){
-    myLineSensor.print();
+    lineSensor.print();
     Serial.print("Front Button State : ");
     Serial.println(Move::bumperHit);
     Serial.print("Motor Distances (cm) >");
@@ -31,9 +31,9 @@ void loop(){
     Serial.print(" Right : ");
     Serial.println(rightMotor.getDistance());
   }
-  myLineSensor.update();
+  lineSensor.update();
   
-  if(Move::checkBumper())Move::followLine(125, myLineSensor.frontLeft, myLineSensor.frontRight, myLineSensor.frontCenter, rightMotor, leftMotor);
+  if(Move::checkBumper())Move::followLine(125, lineSensor.frontLeft, lineSensor.frontRight, lineSensor.frontCenter, rightMotor, leftMotor);
   else{
     leftMotor.drive(0);
     rightMotor.drive(0);
