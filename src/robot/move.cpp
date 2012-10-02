@@ -33,5 +33,8 @@ namespace Move
     atIntersection = 0;
    }
   }
-
+  
+  uint8_t checkBumper(void){
+    return digitalRead(BUMPER_PIN);
+  }
 }

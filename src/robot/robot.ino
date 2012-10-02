@@ -25,7 +25,7 @@ void loop(){
     myLineSensor.print();
     Serial.print("Front Button State : ");
     Serial.println(Move::bumperHit);
-    Serial.print("Motor Distances >");
+    Serial.print("Motor Distances (cm) >");
     Serial.print(" Left : ");
     Serial.print(leftMotor.getDistance());
     Serial.print(" Right : ");
@@ -33,10 +33,7 @@ void loop(){
   }
   myLineSensor.update();
   
-  if(!digitalRead(BUMPER_PIN))Move::bumperHit = 1;
-  else Move::bumperHit = 0;
-  
-  if(!Move::bumperHit)Move::followLine(125, myLineSensor.frontLeft, myLineSensor.frontRight, myLineSensor.frontCenter, rightMotor, leftMotor);
+  if(Move::checkBumper())Move::followLine(125, myLineSensor.frontLeft, myLineSensor.frontRight, myLineSensor.frontCenter, rightMotor, leftMotor);
   else{
     leftMotor.drive(0);
     rightMotor.drive(0);
