@@ -23,4 +23,7 @@
 #define WARNING_LIGHT
 
 
+/*** Hardware Constants ***/
 
+#define ENCODER_CPR 1856
+#define WHEEL_RADIUS_CM 3.4925

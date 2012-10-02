@@ -2,6 +2,7 @@
 #define __MOVEH__
 #include "Arduino.h"
 #include <stdlib.h>
+#include "robot.h"
 
 #define HBRIDGE1 3
 #define HBRIDGE2 4
@@ -29,6 +30,8 @@ namespace Move
   volatile extern uint8_t bumperHit;
   volatile extern uint32_t leftCount, rightCount;
   void followLine(int16_t speed, uint8_t leftSensor, uint8_t midSensor, uint8_t rightSensor, Motor, Motor);  
+  float getLeftDistance(void);
+  float getRightDistance(void);
 }
 
 #endif

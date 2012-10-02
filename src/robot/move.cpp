@@ -40,7 +40,7 @@ void Motor::log()
 
 namespace Move
 {
-  volatile uint8_t bumperHit;
+  volatile uint8_t bumperHit = 0;
   volatile uint32_t leftCount = 0;
   volatile uint32_t rightCount = 0;
   
@@ -61,6 +61,12 @@ namespace Move
     left.drive(speed);
     right.drive(speed*RIGHT_LINE_FOLLOW_PROP);
    }
+  }
+  float getLeftDistance(void){
+    return (float)leftCount/ENCODER_CPR*2*PI*WHEEL_RADIUS_CM;
+  }
+  float getRightDistance(void){
+    return (float)rightCount/ENCODER_CPR*2*PI*WHEEL_RADIUS_CM;   
   }
   
 }
