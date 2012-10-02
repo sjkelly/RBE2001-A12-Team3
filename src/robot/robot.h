@@ -31,3 +31,5 @@
 /*** Tuning Defines ***/
 #define RIGHT_LINE_FOLLOW_PROP 0.7
 #define LEFT_LINE_FOLLOW_PROP 0.5
+#define LINE_SENSOR_CHARGE_US 5  //How long we charge the capacitor
+#define LINE_SENSOR_READ_US 20 //How long we wait between 

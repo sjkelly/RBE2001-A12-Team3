@@ -10,11 +10,11 @@ void lineSensor::update(){
   DDRA = B00111111; //Set to output
   PORTA = B00111111; //write to output
   DDRA = B00000000; //set to input
-  delayMicroseconds(CHARGE_MICROS); //Wait for a 
+  delayMicroseconds(LINE_SENSOR_CHARGE_US); //Wait for a 
   
   uint32_t time = micros();
   
-  while (micros() - time < READ_MICROS) state = PINA; 
+  while (micros() - time < LINE_SENSOR_READ_US) state = PINA; 
   
   frontLeft = state & B00000001;
   frontRight = state & B00000010;

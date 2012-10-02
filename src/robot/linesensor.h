@@ -7,9 +7,7 @@
 #define LINESENSOR_H
 
 #include <avr/io.h>
-
-#define CHARGE_MICROS 5  //How long we charge the capacitor
-#define READ_MICROS 20 //How long we wait between 
+#include "robot.h"
 
 class lineSensor{
   public:
