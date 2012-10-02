@@ -1,48 +1,11 @@
 #include "move.h"
 
-
-Motor::Motor(int8_t _encPin, int8_t _drivePin, int8_t _oneA, int8_t _twoA, bool _reverse)
-{
- pinMode(_oneA, OUTPUT);
- pinMode(_twoA, OUTPUT);
- encPin = _encPin;
- drivePin = _drivePin;
- reverse = _reverse;
- oneA = _oneA;
- twoA = _twoA;
- //attachInterrupt(_encPin, log, RISING);
-}
- 
-void Motor::drive(int16_t speed)
-{
- if(speed > 0)
- {
-  digitalWrite(oneA, 0);
-  digitalWrite(twoA, 1);
- }
- else
- {
-  speed *= -1;
-  digitalWrite(twoA, 0);
-  digitalWrite(oneA, 1);
- }
- analogWrite(drivePin, speed);
-}
-void Motor::log()
-{
- if(speed > 0)
-  ticks++;
- else
-  ticks--;
-}
-
-
-
 namespace Move
 {
   volatile uint8_t bumperHit = 0;
-  volatile uint32_t leftCount = 0;
-  volatile uint32_t rightCount = 0;
+  uint8_t atIntersection = 0;
+  
+  float currentPosition[2] = {0,0};
   
   void followLine(int16_t speed, uint8_t leftSensor, uint8_t midSensor, uint8_t rightSensor, Motor right, Motor left)
   {
@@ -50,23 +13,25 @@ namespace Move
    {
     left.drive(speed);
     right.drive(speed);
+    atIntersection = 0;
+   }
+   else if(leftSensor&&midSensor&&rightSensor){
+    left.drive(speed);
+    right.drive(speed); 
+    atIntersection = 1;
    }
    else if(rightSensor)
    {
     right.drive(speed);
     left.drive(speed*LEFT_LINE_FOLLOW_PROP);
+    atIntersection = 0;
    }
    else if(leftSensor)
    {
     left.drive(speed);
     right.drive(speed*RIGHT_LINE_FOLLOW_PROP);
+    atIntersection = 0;
    }
   }
-  float getLeftDistance(void){
-    return (float)leftCount/ENCODER_CPR*2*PI*WHEEL_RADIUS_CM;
-  }
-  float getRightDistance(void){
-    return (float)rightCount/ENCODER_CPR*2*PI*WHEEL_RADIUS_CM;   
-  }
-  
+
 }

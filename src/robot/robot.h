@@ -1,5 +1,4 @@
 
-
 /*** Use Options ***/
 #define DEBUG 1
 
@@ -27,3 +26,8 @@
 
 #define ENCODER_CPR 1856
 #define WHEEL_RADIUS_CM 3.4925
+
+
+/*** Tuning Defines ***/
+#define RIGHT_LINE_FOLLOW_PROP 0.7
+#define LEFT_LINE_FOLLOW_PROP 0.5

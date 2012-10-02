@@ -1,7 +1,7 @@
 #include "robot.h"
 #include "linesensor.h"
 #include "move.h"
-
+#include "motor.h"
 
 lineSensor myLineSensor;
 Motor leftMotor(19,8,33,34,1);
@@ -25,11 +25,11 @@ void loop(){
     myLineSensor.print();
     Serial.print("Front Button State : ");
     Serial.println(Move::bumperHit);
-    Serial.print("Encoder Counts >");
+    Serial.print("Motor Distances >");
     Serial.print(" Left : ");
-    Serial.print(Move::leftCount);
+    Serial.print(leftMotor.getDistance());
     Serial.print(" Right : ");
-    Serial.println(Move::rightCount);
+    Serial.println(rightMotor.getDistance());
   }
   myLineSensor.update();
   
@@ -43,12 +43,14 @@ void loop(){
   }
 }
 
+/*** ISRs **/
+
 void rightEncoderISR(){
-  Move::rightCount++; 
+  rightMotor.count++; 
 }
 
 void leftEncoderISR(){
-  Move::leftCount++;
+  leftMotor.count++;
 }
 
 
