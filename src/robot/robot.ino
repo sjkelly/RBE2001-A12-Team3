@@ -2,45 +2,38 @@
 #include "linesensor.h"
 #include "move.h"
 #include "motor.h"
+#include "comms.h"
 
-LineSensor lineSensor;
-Motor leftMotor(19,8,33,34,1);
-Motor rightMotor(29,9,35,36,1);
+//Object Constructors
+LineSensor lineSensor(LINE_SENSOR_CHARGE_US,LINE_SENSOR_READ_US);
+Motor leftMotor(LEFT_ENCODER,LEFT_DRIVE,LEFT_1A,LEFT_2A);
+Motor rightMotor(RIGHT_ENCODER,RIGHT_DRIVE,RIGHT_1A,RIGHT_2A);
+Move move(BUMPER_PIN, lineSensor, leftMotor, rightMotor);
 
 void setup(){
   
   Serial.begin(9600);
-  pinMode(BUMPER_PIN, INPUT);
-  pinMode(LEFT_ENCODER, INPUT);
-  pinMode(RIGHT_ENCODER, INPUT);
+
   
-  digitalWrite(BUMPER_PIN, HIGH);       // turn on pullup resistors for our switch
-  
-  attachInterrupt(LEFT_ENCODER_INTERRUPT,leftEncoderISR,RISING);
-  attachInterrupt(RIGHT_ENCODER_INTERRUPT,rightEncoderISR,RISING);
+  attachInterrupt(leftMotor.interruptPin,leftEncoderISR,RISING);
+  attachInterrupt(rightMotor.interruptPin,rightEncoderISR,RISING);
 }
 
 void loop(){
-  if(DEBUG){
-    lineSensor.print();
-    Serial.print("Front Button State : ");
-    Serial.println(Move::bumperHit);
-    Serial.print("Motor Distances (cm) >");
-    Serial.print(" Left : ");
-    Serial.print(leftMotor.getDistance());
-    Serial.print(" Right : ");
-    Serial.println(rightMotor.getDistance());
-  }
+  if(DEBUG) debug(lineSensor, leftMotor, rightMotor, move);
+  
   lineSensor.update();
   
-  if(Move::checkBumper())Move::followLine(125, lineSensor.frontLeft, lineSensor.frontRight, lineSensor.frontCenter, rightMotor, leftMotor);
+  if(move.checkBumper())move.followLine(125);
   else{
     leftMotor.drive(0);
     rightMotor.drive(0);
   }
 }
 
-/*** ISRs **/
+
+/*** ISRs ***/
+//Cannot be class methods!
 
 void rightEncoderISR(){
   rightMotor.count++; 
