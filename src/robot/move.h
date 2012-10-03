@@ -5,6 +5,7 @@
 #include "motor.h"
 #include "linesensor.h"
 
+
 class Move
 {
   public:
@@ -14,14 +15,14 @@ class Move
   Move(uint8_t,LineSensor&, Motor&, Motor&);
   void followLine(int16_t speed);
   uint8_t checkBumper(void);
-  void turn180(void);
-  void turnRight(void);
-  void turnLeft(void);  
+  void turn180(int16_t);
+  void turnRight(int16_t);
+  void turnLeft(int16_t);  
   
   private:
+  LineSensor& lineSensor;
   Motor& leftMotor; 
   Motor& rightMotor;
-  LineSensor& lineSensor;
   uint8_t bumperPin;
 };
 

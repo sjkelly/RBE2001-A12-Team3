@@ -1,6 +1,6 @@
 #include "comms.h"
 
-void debug(LineSensor lineSensor, Motor leftMotor, Motor rightMotor, Move move){
+void debug(LineSensor &lineSensor, Motor &leftMotor, Motor &rightMotor, Move &move){
     Serial.print("Line Sensor States:");
     Serial.println(lineSensor.state,BIN);
     Serial.print("Front Button State : ");

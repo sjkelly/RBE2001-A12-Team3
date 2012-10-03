@@ -24,11 +24,15 @@ void loop(){
   
   lineSensor.update();
   
+  
+  move.turn180(125);
+  /*
   if(move.checkBumper())move.followLine(125);
   else{
     leftMotor.drive(0);
     rightMotor.drive(0);
   }
+  */
 }
 
 

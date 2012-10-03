@@ -44,21 +44,25 @@ uint8_t Move::checkBumper(void){
   return digitalRead(bumperPin);
 }
 
-void Move::turn180(void){
+void Move::turn180(int16_t speed){
   float targetDistance = WHEEL_SPACING_CM*PI/2;
-  while(1){
-    
-    
-    
-  }
+  if(leftMotor.getDistance()<targetDistance) leftMotor.drive(speed);
+  else leftMotor.drive(0);
+  if(rightMotor.getDistance()<targetDistance) rightMotor.drive(speed*-1);
+  else rightMotor.drive(0); 
 }
-void Move::turnRight(void){
+void Move::turnRight(int16_t speed){
   float targetDistance = WHEEL_SPACING_CM*PI/4;   
-  
+  if(leftMotor.getDistance()<targetDistance) leftMotor.drive(speed*-1);
+  else leftMotor.drive(0);
+  if(rightMotor.getDistance()<targetDistance) rightMotor.drive(speed);
+  else rightMotor.drive(0);  
 }
-void Move::turnLeft(void){
+void Move::turnLeft(int16_t speed){
   float targetDistance = WHEEL_SPACING_CM*PI/4;
-  
-  
+  if(leftMotor.getDistance()<targetDistance) leftMotor.drive(speed);
+  else leftMotor.drive(0);
+  if(rightMotor.getDistance()<targetDistance) rightMotor.drive(speed*-1);
+  else rightMotor.drive(0);  
 }
 

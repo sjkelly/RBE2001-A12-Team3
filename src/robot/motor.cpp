@@ -23,17 +23,22 @@ void Motor::drive(int16_t speed)
   digitalWrite(oneA, 0);
   digitalWrite(twoA, 1);
  }
- else
+ else if(speed < 0)
  {
   speed *= -1;
   digitalWrite(twoA, 0);
   digitalWrite(oneA, 1);
  }
+ else if(speed == 0)
+ {
+  digitalWrite(twoA, 0);
+  digitalWrite(oneA, 0);
+ }
  analogWrite(drivePin, speed);
 }
 
 float Motor::getDistance(void){
-  return (float)count/ENCODER_CPR*2*PI*WHEEL_RADIUS_CM;
+  return (float)count/ENCODER_CPR*4*PI*WHEEL_RADIUS_CM;
 }
 
 void Motor::encoderISR(){
