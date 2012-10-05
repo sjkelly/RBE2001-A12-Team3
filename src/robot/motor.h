@@ -13,9 +13,9 @@ class Motor
   Motor();
   Motor(int8_t _encPin, int8_t _drivePin, int8_t _oneA, int8_t _twoA);
   void drive(int16_t speed);
-  float getDistance(void);
-  void encoderISR();
-  int32_t count;
+  double getDistance(void);
+  void resetDistance(void);
+  volatile int32_t count;
   uint8_t interruptPin;
 };
 

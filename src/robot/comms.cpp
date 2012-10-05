@@ -5,6 +5,11 @@ void debug(LineSensor &lineSensor, Motor &leftMotor, Motor &rightMotor, Move &mo
     Serial.println(lineSensor.state,BIN);
     Serial.print("Front Button State : ");
     Serial.println(move.checkBumper());
+    Serial.print("Motor Counts >");
+    Serial.print(" Left : ");
+    Serial.print(leftMotor.count);
+    Serial.print(" Right : ");
+    Serial.println(rightMotor.count);
     Serial.print("Motor Distances (cm) >");
     Serial.print(" Left : ");
     Serial.print(leftMotor.getDistance());

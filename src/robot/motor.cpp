@@ -37,10 +37,10 @@ void Motor::drive(int16_t speed)
  analogWrite(drivePin, speed);
 }
 
-float Motor::getDistance(void){
-  return (float)count/ENCODER_CPR*4*PI*WHEEL_RADIUS_CM;
+double Motor::getDistance(void){
+  return (double)(count/ENCODER_CPR)*2*PI*WHEEL_RADIUS_CM;
 }
 
-void Motor::encoderISR(){
-  count++;
+void Motor::resetDistance(void){
+  count = 0;
 }

@@ -21,13 +21,20 @@ void LineSensor::update(){
   
   while (micros() - time < read) state = PINA; 
   
-  frontLeft = state & B00000001;
-  frontRight = state & B00000010;
-  frontCenter = state & B00000100;
-  rearLeft = state & B00001000;
-  rearRight = state & B00010000;
-  rearCenter = state & B00100000;
-  
+  if(state == lastState){
+    consecutiveStates++;
+    return;
+  }
+  else {
+    consecutiveStates = 0;
+    lastState = state;
+    frontLeft = state & B00000001;
+    frontRight = state & B00000010;
+    frontCenter = state & B00000100;
+    wingLeft = state & B00001000;
+    wingRight = state & B00010000;
+    rearCenter = state & B00100000;
+  }
 }
 
 /*#include "sensor.h"

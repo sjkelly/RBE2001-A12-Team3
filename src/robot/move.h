@@ -13,12 +13,13 @@ class Move
   float currentPosition[2];  //(x,y)
   
   Move(uint8_t,LineSensor&, Motor&, Motor&);
-  void followLine(int16_t speed);
+  uint8_t followLine(int16_t speed);
   uint8_t checkBumper(void);
   void turn180(int16_t);
   void turnRight(int16_t);
   void turnLeft(int16_t);  
-  
+  void forward(double, int16_t, uint8_t);
+  void to(double, double, int16_t);
   private:
   LineSensor& lineSensor;
   Motor& leftMotor; 

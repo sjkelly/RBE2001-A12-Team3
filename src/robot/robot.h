@@ -27,12 +27,20 @@
 
 /*** Hardware Constants ***/
 
-#define ENCODER_CPR 1856
+#define ENCODER_CPR 3200
 #define WHEEL_RADIUS_CM 3.4925
 #define WHEEL_SPACING_CM 24.130
+#define DISTANCE90 WHEEL_SPACING_CM*PI/4
+#define DISTANCE180 WHEEL_SPACING_CM*PI/2
 
 /*** Tuning Defines ***/
-#define RIGHT_LINE_FOLLOW_PROP 0.6
-#define LEFT_LINE_FOLLOW_PROP 0.6
+#define RIGHT_LINE_FOLLOW_PROP -0.2
+#define LEFT_LINE_FOLLOW_PROP -0.2
 #define LINE_SENSOR_CHARGE_US 5  //How long we charge the capacitor
 #define LINE_SENSOR_READ_US 20 //How long we wait between 
+#define LINE_SENSOR_CONSECUTIVE_READS 10
+
+
+/*** Field Lengths ***/
+#define FIELD_X 172
+#define FIELD_Y 190
