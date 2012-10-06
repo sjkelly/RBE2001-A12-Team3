@@ -1,8 +1,10 @@
 #ifndef ___BLUETOOTH___
 #define ___BLUETOOTH___
 #define MAX_MESSAGE_SIZE 300
+#define ID 0x03
 #include <stdint.h>
 #include "Arduino.h"
+#include "robot.h"
 /*************
 The purpose of this file is to provide an easy to use interface for sending and
 recieving bluetooth messages from the master field coordinator. 
@@ -15,7 +17,7 @@ Goals:
 
 //this is just a buffer enum, it doesn't belong here, but reprents any random buffers we want to hook into
 //later
-enum buffer
+//enum buffer;
 
 
 
@@ -48,25 +50,28 @@ class btInterface
 //this could be our buffer for storing bluetooth messages. We have to make sure we fill them as big
 //endian. 300 is just a rounnd number that is above the maximum message size, and is a round number. 
 //we should reduce this to gain some extra memory, it's kindof absurdly high right now.
-   uint8_t btBuffer[MAX_MESSAGE_SIZE];
-
+   
+  uint8_t btBuffer[300];
 //This is the Init function, it should be called during void setup()
  //we should add an exeption to all of these in order to ensure that everyting initializes properly
-  initBluetooth();
+  void initBluetooth();
 //btSend will be fore when the robot has to send out a message. it accepts a message type, and a pointer to
 //the message data. I've also decided to include optional destination arguments, however we 
 //should be able to tell what it should be based on the message type. once again, this should throw an 
 //exception upon failure
  public:
-  btInterface(uint16_t _btID);
-  void btRecieve();
+  
+  btInterface(void);
+  void btRecieve(void);
   void btSend(btType type, uint8_t *data, uint8_t destination);
 
 //btHandle will handle the bluetooth message. It takes a point16er to a bluetooth message, and optionally 
 //a point16er to a response buffer (right now It's just a buffer enum, howver it can represent something 
 //like our action buffer) It should throw an exeption if something went wrong i.e. if the checksum doesn't 
 //match the message, although if that happens frequently we should use a faster method of error checking
-  void btHandle(uint8_t *btMessage);
+  void btHandle();
+  
+  void sendHeartbeat();
 
 };
 #endif
