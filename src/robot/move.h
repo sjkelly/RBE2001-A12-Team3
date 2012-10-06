@@ -12,7 +12,7 @@ class Move
   uint8_t atIntersection;
   float currentPosition[2];  //(x,y)
   
-  Move(uint8_t,LineSensor&, Motor&, Motor&);
+  Move(uint8_t,LineSensor*, Motor*, Motor*);
   uint8_t followLine(int16_t speed);
   uint8_t checkBumper(void);
   void turn180(int16_t);
@@ -21,9 +21,9 @@ class Move
   void forward(double, int16_t, uint8_t);
   void to(double, double, int16_t);
   private:
-  LineSensor& lineSensor;
-  Motor& leftMotor; 
-  Motor& rightMotor;
+  LineSensor* lineSensor;
+  Motor* leftMotor; 
+  Motor* rightMotor;
   uint8_t bumperPin;
 };
 

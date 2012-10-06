@@ -6,6 +6,6 @@
 #include "move.h"
 #include "motor.h"
 
-void debug(LineSensor&, Motor&, Motor&, Move&); 
+void debug(LineSensor*, Motor*, Motor*, Move*); 
 
 #endif

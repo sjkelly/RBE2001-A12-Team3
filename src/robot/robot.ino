@@ -8,7 +8,7 @@
 LineSensor lineSensor(LINE_SENSOR_CHARGE_US,LINE_SENSOR_READ_US);
 Motor leftMotor(LEFT_ENCODER,LEFT_DRIVE,LEFT_1A,LEFT_2A);
 Motor rightMotor(RIGHT_ENCODER,RIGHT_DRIVE,RIGHT_1A,RIGHT_2A);
-Move move(BUMPER_PIN, lineSensor, leftMotor, rightMotor);
+Move move(BUMPER_PIN, &lineSensor, &leftMotor, &rightMotor);
 int i =0;
 
 void setup(){
@@ -20,7 +20,7 @@ void setup(){
 }
 
 void loop(){
-  if(DEBUG) debug(lineSensor, leftMotor, rightMotor, move);
+  if(DEBUG) debug(&lineSensor, &leftMotor, &rightMotor, &move);
   
   lineSensor.update();
  
