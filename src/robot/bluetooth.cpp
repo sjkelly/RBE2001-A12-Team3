@@ -25,7 +25,7 @@ void btInterface::btHandle(uint8_t *btMessage = &btBuffer[0])
   //debug wrong delimiter here
  uint16_t size;
  uint16_t checksum;
- for(size = 0; btMessage[size+3] != TERMINATOR; size++)
+ for(size = 0; size+1 < btBuffer[1]; size++)
  {
   checksum += btMessage[size+2];
  }
