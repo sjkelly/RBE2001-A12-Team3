@@ -3,41 +3,50 @@
 //we should place this in a definitions file
 //as well as change the terminating character to something the standard probably doesn't use
 #define TERMINATOR '\0'
-btInterface::btInterface(uint16_t _btID)
+btInterface::btInterface()
 {
- this->btID = _btID;
- Serial1.begin(115200); 
+ this->btID = ID;
+ Serial3.begin(115200); 
 }
-void btInterface::btRecieve(uint8_t *btByte = &btBuffer[0])
+void btInterface::btRecieve(void)
 {
- while(Serial1.available()<0)
+ uint8_t *btByte = &btBuffer[0];
+ while(Serial3.available()<0)
   {
-   *btByte = Serial1.read();
+   *btByte = Serial3.read();
    btByte++;
   }
- *btByte = TERMINATOR;
+ //*btByte = TERMINATOR;
 } 
 
-void btInterface::btHandle(uint8_t *btMessage = &btBuffer[0])
+void btInterface::btHandle(void)
 {
+  uint8_t *btMessage = &btBuffer[0];
  //error checking, throws exception on error 
- if(btBuffer[0] != 0x5f)
+ if(btBuffer[0] != 0x5f){}
   //debug wrong delimiter here
- uint16_t size;
+ uint16_t Size;
  uint16_t checksum;
  for(size = 0; size+1 < btBuffer[1]; size++)
  {
-  checksum += btMessage[size+2];
+  checksum += btMessage[Size+2];
  }
- if(size != btMessage[2])
+ if(Size != btMessage[2]){}
   //debug wrong size, possibly incomplete transmission
- if(btMessage[size] != (checksum < 0xff)?checksum:0xff)
+ if(btMessage[Size+2] != (checksum < 0xff)?checksum:0xff){}
   //debug worng checksum, possibly misread transimission
- swtich(btMessage[2])
+ switch(btMessage[2])
  {
   //this is where we either hanld each bluetooth mesage or we create hooks into 
   //functions later in the proghram
   case STORAGE_TUBE:
+  
+  if(DEBUG)
+  {
+    char dBuffer[20];
+    sprintf(dBuffer, "Storage tube %d available", btMessage[3]);
+    Serial.println(dBuffer);
+  }  
   break;
   case SUPPLY_TUBE:
   break;
@@ -50,7 +59,7 @@ void btInterface::btHandle(uint8_t *btMessage = &btBuffer[0])
  }
 }
 //at this point, data needs a null character to terminate
-void btInterface::btSend(btType type, uint8_t *data, uint8_t destination)
+void btInterface::btSend(btType type, uint8_t *data, uint8_t destination = 0x00)
 {
  uint8_t mBuffer[MAX_MESSAGE_SIZE];
  uint8_t *iterator;
@@ -75,10 +84,22 @@ void btInterface::btSend(btType type, uint8_t *data, uint8_t destination)
  mBuffer[1] = size + 3;
  //checksum
  mBuffer[size + 5] = (checksum < 0xFF)?checksum:0xFF;
- mBuffer[size + 6] = TERMINATOR;
+ mBuffer[size + 6] = 0x0;
  for(iterator = &mBuffer[0]; *iterator != TERMINATOR; iterator++)
  {
-  Serial1.print(*iterator);
+  Serial3.print(*iterator);
  }
 }
+
+void btInterface::sendHeartbeat()
+{
+  //uint8_t data = 0x00;
+  //btSend(HEARTBEAT, &data);
+  
+  uint8_t pkt[7] = {0x5F, 0x06, 0x07, 0x01, 0x00, 0x00, 0xF1};
+  Serial3.write(pkt,7);
+  
+  //*/
+} 
+
 
