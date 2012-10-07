@@ -25,15 +25,15 @@ void btInterface::btHandle(void)
  //error checking, throws exception on error 
  if(btBuffer[0] != 0x5f){}
   //debug wrong delimiter here
- uint16_t Size;
+ uint16_t size;
  uint16_t checksum;
  for(size = 0; size+1 < btBuffer[1]; size++)
  {
-  checksum += btMessage[Size+2];
+  checksum += btMessage[size+2];
  }
- if(Size != btMessage[2]){}
+ if(size != btMessage[2]){}
   //debug wrong size, possibly incomplete transmission
- if(btMessage[Size+2] != (checksum < 0xff)?checksum:0xff){}
+ if(btMessage[size+2] != (checksum < 0xff)?checksum:0xff){}
   //debug worng checksum, possibly misread transimission
  switch(btMessage[2])
  {
