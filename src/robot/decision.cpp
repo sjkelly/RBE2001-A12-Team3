@@ -27,3 +27,15 @@ void decisionEng::spentMessage(uint8_t mask)
  state->spent4 = *i;
 }
 
+uint8_t decisionEng::determineDest()
+{
+ switch state->clawContents
+ {
+  case NO_ROD:
+   break;
+  case SPENT_ROD:
+   break;
+  case NEW_ROD:
+   break;
+     
+  
