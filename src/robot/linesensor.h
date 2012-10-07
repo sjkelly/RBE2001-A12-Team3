@@ -15,7 +15,7 @@ class LineSensor{
   LineSensor(uint16_t,uint16_t);
   void update();
   uint8_t state, consecutiveStates;
-  uint8_t frontLeft, frontRight, frontCenter, wingLeft, wingRight, rearCenter;
+  uint8_t frontLeft, frontRight, frontCenter, wingLeft, wingRight, rearRight, rearLeft;
   private:
   uint16_t charge, read;
   uint8_t lastState;

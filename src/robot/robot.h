@@ -16,7 +16,7 @@
 
 #define RIGHT_1A 35
 #define RIGHT_2A 36
-#define RIGHT_DRIVE 9
+#define RIGHT_DRIVE 7
 
 #define LEFT_ENCODER 19
 #define RIGHT_ENCODER 20

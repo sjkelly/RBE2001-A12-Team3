@@ -6,8 +6,7 @@ Move::Move(uint8_t _bumperPin, LineSensor* _lineSensor, Motor* _leftMotor, Motor
   digitalWrite(_bumperPin, HIGH);       // turn on pullup resistors for our switch
   bumperPin = _bumperPin;
   atIntersection = 0;
-  currentPosition[0] = 0;
-  currentPosition[1] = 0;
+  currentPosition = 'A';
   lineSensor = _lineSensor;
   leftMotor = _leftMotor;
   rightMotor = _rightMotor;
@@ -16,10 +15,30 @@ Move::Move(uint8_t _bumperPin, LineSensor* _lineSensor, Motor* _leftMotor, Motor
 uint8_t Move::followLine(int16_t speed)
 {
  lineSensor->update();
- if(!lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight)
+ if(!lineSensor->frontLeft&&!lineSensor->frontCenter&&!lineSensor->frontRight)
  {
   leftMotor->drive(speed);
   rightMotor->drive(speed);
+ }
+ else if(!lineSensor->frontLeft&&!lineSensor->frontCenter&&lineSensor->frontRight){
+  leftMotor->drive(speed*0.9);
+  rightMotor->drive(speed*0.5);
+ }
+ else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight){
+  leftMotor->drive(speed);
+  rightMotor->drive(speed);
+ }
+ else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight){
+  leftMotor->drive(speed*0.8);
+  rightMotor->drive(speed*0.6);
+ }
+ else if(lineSensor->frontLeft&&!lineSensor->frontCenter&&!lineSensor->frontRight){
+  leftMotor->drive(speed*0.5);
+  rightMotor->drive(speed*0.9);
+ }
+ else if(lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight){
+  leftMotor->drive(speed*0.6);
+  rightMotor->drive(speed*0.8);
  }
  else if(lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight&&lineSensor->wingRight&&lineSensor->wingLeft){
   leftMotor->drive(speed);
@@ -29,30 +48,6 @@ uint8_t Move::followLine(int16_t speed)
     return 1;
   }
  }
- else if(lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight)
- {
-  rightMotor->drive(speed);
-  leftMotor->drive(0);
- }
- else if(!lineSensor->frontRight&&lineSensor->frontCenter&&lineSensor->frontRight)
- {
-  leftMotor->drive(speed);
-  rightMotor->drive(0);
- }
- else if(lineSensor->frontLeft&&!lineSensor->frontCenter&&!lineSensor->frontRight)
- {
-  rightMotor->drive(speed);
-  leftMotor->drive(speed/2);
- }
- else if(!lineSensor->frontRight&&!lineSensor->frontCenter&&lineSensor->frontRight)
- {
-  leftMotor->drive(speed);
-  rightMotor->drive(speed/2);
- }
- /*else {
-   leftMotor->drive(speed);
-   rightMotor->drive(speed);
- }*/
  return 0;
 }
 
@@ -90,11 +85,10 @@ void Move::turnLeft(int16_t speed){
  rightMotor->resetDistance();
  while(leftMotor->getDistance()<=DISTANCE90 && rightMotor->getDistance()<=DISTANCE90)
  {
-   if(leftMotor->getDistance()<=DISTANCE90)leftMotor->drive(speed*-1);
-   else leftMotor->drive(0);
-   if(rightMotor->getDistance()<=DISTANCE90)rightMotor->drive(speed);
-   else rightMotor->drive(0);
-   if(lineSensor->rearCenter && lineSensor->consecutiveStates > LINE_SENSOR_CONSECUTIVE_READS) break;
+   leftMotor->drive(speed*-1);
+
+   rightMotor->drive(speed);
+   //if(lineSensor->rearRight && lineSensor->rearLeft && lineSensor->consecutiveStates > LINE_SENSOR_CONSECUTIVE_READS) break;
  }
  rightMotor->drive(0);  
  leftMotor->drive(0); 
@@ -109,53 +103,55 @@ void Move::forward(double target, int16_t speed, uint8_t allowedCrosses){
   volatile double startDistance = 0;
   while(avgDistance<target)
   {
-    if(followLine(speed)){
-      startDistance = avgDistance;
-      while(avgDistance < (startDistance + target/20)){
-        followLine(speed);
-        avgDistance = leftMotor->getDistance()/2+rightMotor->getDistance()/2;  
-      }
-      crossedLines++;
-    }
+    crossedLines += followLine(speed);
+//    if(followLine(speed)){
+//      startDistance = avgDistance;
+//      while(avgDistance < (startDistance + target/20)){
+//        followLine(speed);
+//        avgDistance = leftMotor->getDistance()/2+rightMotor->getDistance()/2;  
+//      }
+//      crossedLines++;
+//    }
+    //if(avgDistance < target/10) speed /= 2;
     avgDistance = leftMotor->getDistance()/2+rightMotor->getDistance()/2;
-    if((crossedLines > allowedCrosses && avgDistance > target/10) || checkBumper()) break;
+//    if((crossedLines > allowedCrosses && avgDistance > target/10) || checkBumper()) break;
   }
   leftMotor->drive(0);
   rightMotor->drive(0);
   if(DEBUG)Serial.println("Forward move finished!");
 }
 
-void Move::to(double targetX, double targetY, int16_t speed){
-  if(targetX == currentPosition[0] && targetY == currentPosition[1]) return;
+void Move::to(uint8_t target, int16_t speed){
+  if(target == currentPosition) return;
   
   //we will always want to backout and turn around
   forward(20,-speed, 1); 
   turn180(speed);
   uint8_t moves;
-  
-  if(currentPosition[0] == targetX) moves = 1; //on the long line
-  else if(currentPosition[1] == targetY) moves = 1; //going across field
-  else if(targetX == 0) moves = 2;  //going to the center 
-  else if(currentPosition[0] == 0) moves = 2; //in the center going elsewhere
-  else moves = 3;
-  
-  if(DEBUG){
-    Serial.print("Making ");
-    Serial.print(moves);
-    Serial.println(" moves");
-  }
-  if(moves == 1){
-    if(currentPosition[0] == targetX)forward(FIELD_Y, speed, 4);
-    else if(currentPosition[1] == targetY)forward(FIELD_X, speed, 1);
-  }
-  else if(moves == 2){
-    
-    
-  }
-  else if(moves == 3){
-    
-    
-    
-  }
+//  
+//  if(currentPosition[0] == targetX) moves = 1; //on the long line
+//  else if(currentPosition[1] == targetY) moves = 1; //going across field
+//  else if(targetX == 0) moves = 2;  //going to the center 
+//  else if(currentPosition[0] == 0) moves = 2; //in the center going elsewhere
+//  else moves = 3;
+//  
+//  if(DEBUG){
+//    Serial.print("Making ");
+//    Serial.print(moves);
+//    Serial.println(" moves");
+//  }
+//  if(moves == 1){
+//    if(currentPosition[0] == targetX)forward(FIELD_Y, speed, 4);
+//    else if(currentPosition[1] == targetY)forward(FIELD_X, speed, 1);
+//  }
+//  else if(moves == 2){
+//    
+//    
+//  }
+//  else if(moves == 3){
+//    
+//    
+//    
+//  }
   
 }

@@ -19,7 +19,7 @@ volatile bool beatFlag = 0;
 void setup(){
   
   Serial.begin(9600);
-  MsTimer2::set(1000, beat);
+  MsTimer2::set(1000, heartBeat);
   attachInterrupt(leftMotor.interruptPin,leftEncoderISR,CHANGE);
   attachInterrupt(rightMotor.interruptPin,rightEncoderISR,CHANGE);
   MsTimer2::start();
@@ -35,22 +35,14 @@ void loop(){
     beatFlag = 0;
   }
   if(DEBUG) debug(&lineSensor, &leftMotor, &rightMotor, &move);
-  /*
-  lineSensor.update();
- 
+
   if(!i){
     //move.to(0, FIELD_Y, 200);
-    //move.forward(30, 200, 255);
+    move.forward(50, 200, 0);
+    //move.turnLeft(200);
+    //move.turnRight(200);
     i++;
   }
-
-  ///*
-  if(move.checkBumper())move.followLine(125);
-  else{
-    leftMotor.drive(0);
-    rightMotor.drive(0);
-  }
-  */
 }
 
 

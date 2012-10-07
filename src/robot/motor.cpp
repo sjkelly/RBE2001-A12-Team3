@@ -38,7 +38,7 @@ void Motor::drive(int16_t speed)
 }
 
 double Motor::getDistance(void){
-  return (double)(count/ENCODER_CPR)*2*PI*WHEEL_RADIUS_CM;
+  return (double)count/ENCODER_CPR*2*PI*WHEEL_RADIUS_CM;
 }
 
 void Motor::resetDistance(void){
