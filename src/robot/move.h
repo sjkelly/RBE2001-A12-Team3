@@ -6,11 +6,11 @@
 #include "linesensor.h"
 
 
+enum moveToType {DRIVING, TURNING};
+
 class Move
 {
   public:
-  uint8_t atIntersection;
-  uint8_t currentPosition;  //(x,y)
   
   Move(uint8_t,LineSensor*, Motor*, Motor*);
   uint8_t followLine(int16_t speed);
@@ -32,10 +32,15 @@ class Move
   int16_t turnTarget;
   
   volatile uint8_t crossedLines;
-  volatile double avgDistance;
-  volatile double startDistance;
-  
+  double avgDistance, startDistance, forwardLength;
+  uint8_t atIntersection;
+  uint8_t currentPosition;  //Same as input to 'move.to'
   uint8_t acceptingCrosses;
+  
+  //for move to
+  uint8_t executedMoves, moves;
+  uint8_t moveCrosses;
+  int16_t turnFirst;
 };
 
 #endif

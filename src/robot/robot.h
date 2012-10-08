@@ -1,5 +1,5 @@
-
-
+#ifndef ROBOT_H
+#define ROBOT_H
 
 /*** Use Options ***/
 #define DEBUG 1
@@ -47,7 +47,7 @@
 
 
 
+/*** Enums ***/
+enum {REACTOR_A,REACTOR_B,NEW_1,NEW_2,NEW_3,NEW_4,SPENT_4,SPENT_3,SPENT_2,SPENT_1};
 
-
-
-
+#endif

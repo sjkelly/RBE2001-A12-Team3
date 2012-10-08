@@ -6,7 +6,7 @@ Move::Move(uint8_t _bumperPin, LineSensor* _lineSensor, Motor* _leftMotor, Motor
   digitalWrite(_bumperPin, HIGH);       // turn on pullup resistors for our switch
   bumperPin = _bumperPin;
   atIntersection = 0;
-  currentPosition = 'A';
+  currentPosition = REACTOR_A;
   lineSensor = _lineSensor;
   leftMotor = _leftMotor;
   rightMotor = _rightMotor;
@@ -71,6 +71,13 @@ uint8_t Move::turn(int16_t angle, int16_t speed){
      leftMotor->drive(speed);
      rightMotor->drive(speed*-1);
    }
+   else if (angle%90 == 0 && lineSensor->rearRight && lineSensor->rearLeft && lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS){
+     rightMotor->drive(0);  
+     leftMotor->drive(0); 
+     if(DEBUG)Serial.println("Turn 180 finished!");
+     turning = 0;
+     turnTarget = 0; 
+   }
    return 0;
  }
  else {
@@ -105,6 +112,8 @@ uint8_t Move::forward(double target, int16_t speed, uint8_t allowedCrosses){
     avgDistance = leftMotor->getDistance()/2+rightMotor->getDistance()/2;
     if(crossedLines > allowedCrosses){
       drivingForward = 0;
+      leftMotor->drive(0);
+      rightMotor->drive(0);   
       return 1;
     }
   }
@@ -119,36 +128,96 @@ uint8_t Move::forward(double target, int16_t speed, uint8_t allowedCrosses){
 }
 
 uint8_t Move::to(uint8_t target, int16_t speed){
-  if(target == currentPosition) return 1;
-  
-//  //we will always want to backout and turn around
-//  forward(20,-speed, 1); 
-//  turn(speed, 180);
-//  uint8_t moves;
-//  
-//  if(currentPosition[0] == targetX) moves = 1; //on the long line
-//  else if(currentPosition[1] == targetY) moves = 1; //going across field
-//  else if(targetX == 0) moves = 2;  //going to the center 
-//  else if(currentPosition[0] == 0) moves = 2; //in the center going elsewhere
-//  else moves = 3;
-//  
-//  if(DEBUG){
-//    Serial.print("Making ");
-//    Serial.print(moves);
-//    Serial.println(" moves");
-//  }
-//  if(moves == 1){
-//    if(currentPosition[0] == targetX)forward(FIELD_Y, speed, 4);
-//    else if(currentPosition[1] == targetY)forward(FIELD_X, speed, 1);
-//  }
-//  else if(moves == 2){
-//    
-//    
-//  }
-//  else if(moves == 3){
-//    
-//    
-//    
-//  }
+  if(!moving){
+    if(target == currentPosition) return 1; //at the position already. we are done
+    executedMoves = 0;
+    //find # of moves
+    if((target + 1 == REACTOR_B || target-1 == REACTOR_A) && (currentPosition == REACTOR_A || currentPosition == REACTOR_B)) moves = 1;
+    else if((currentPosition+4 == target || currentPosition-4 == target) && (currentPosition > REACTOR_B)) moves = 1;
+    else if(target > REACTOR_B && currentPosition <= REACTOR_B) moves = 2;
+    else if(target <= REACTOR_B && currentPosition > REACTOR_B) moves = 2;
+    else moves = 3;
+    
+    //find allowable crosses
+    if(moves == 1 && target == REACTOR_B){ moveCrosses = 4; forwardLength = FIELD_Y; }
+    else if(moves == 1 && target > REACTOR_B) { moveCrosses = 1; forwardLength = FIELD_X;}
+    else if(moves == 2 && currentPosition <= REACTOR_B) {
+      //calculate turn direction
+      if(currentPosition == REACTOR_A && target <= NEW_4){
+        moveCrosses = target - 2;
+        turnFirst = 90;
+      }
+      else if(currentPosition == REACTOR_A && target > NEW_4){
+        moveCrosses = target - 6;
+        turnFirst = -90;
+      }
+      else if(currentPosition == REACTOR_B && target <= NEW_4){
+        moveCrosses = 5 - target;
+        turnFirst = -90;
+      }
+      else if(currentPosition == REACTOR_B && target > NEW_4){
+        moveCrosses = 9 - target;
+        turnFirst = 90;
+      }
+    }
+    else if(moves == 2 && currentPosition > REACTOR_B) {
+      //calculate turn direction
+      if(currentPosition < NEW_4 && target == REACTOR_A){
+        moveCrosses = currentPosition - 2;
+        turnFirst = -90;
+      }
+      else if(currentPosition >= NEW_4 && target == REACTOR_A){
+        moveCrosses = currentPosition - 6;
+        turnFirst = -90;
+      }
+      if(currentPosition < SPENT_1 && target == REACTOR_B){
+        moveCrosses = currentPosition - 2;
+        turnFirst = 90;
+      }
+      else if(currentPosition >= SPENT_1 && target == REACTOR_B){
+        moveCrosses = currentPosition - 9;
+        turnFirst = 90;
+      }
+    }
+    else if(moves == 3) {
+      moveCrosses = abs(currentPosition - target + 4);
+      if(currentPosition <= NEW_4 && currentPosition + 4 > target) turnFirst = -90;
+      if(currentPosition <= NEW_4 && currentPosition + 4 < target) turnFirst = 90;
+      if(currentPosition > NEW_4 && currentPosition - 4 > target) turnFirst = -90;
+      if(currentPosition > NEW_4 && currentPosition - 4 < target) turnFirst = 90;
+    } 
+    moving = 1;
+  }
+  if(moving){
+    if(moves == 1){
+      if(executedMoves == 0) executedMoves += forward(20,-speed, 1); //reverse 20
+      if(executedMoves == 1) executedMoves += turn(speed, 180); 
+      if(executedMoves == 2) executedMoves += forward(forwardLength,speed, moveCrosses);
+      if(executedMoves == 4){ moving = 0; currentPosition = target; }
+    }
+    else if(moves == 2){
+      if(executedMoves == 0) executedMoves += forward(20,-speed, 1); 
+      if(executedMoves == 1) executedMoves += turn(speed, 180);
+      if(executedMoves == 2) executedMoves += forward(FIELD_Y,speed, 0);
+      if(executedMoves == 3) executedMoves += turn(speed, turnFirst);
+      if(executedMoves == 4) executedMoves += forward(forwardLength, speed, moveCrosses);      
+      if(executedMoves == 5){ moving = 0; currentPosition = target; }
+    }
+    else if(moves == 3){ //moves == 3
+      if(executedMoves == 0) executedMoves += forward(20,-speed, 1); 
+      if(executedMoves == 1) executedMoves += turn(speed, 180);
+      if(executedMoves == 2) executedMoves += forward(FIELD_X/2,speed, 0);
+      if(executedMoves == 3) executedMoves += turn(speed, turnFirst);
+      if(executedMoves == 4) executedMoves += forward(forwardLength, speed, moveCrosses);
+      if(executedMoves == 5) executedMoves += turn(speed, turnFirst*-1);
+      if(executedMoves == 6) executedMoves += forward(FIELD_X/2,speed, 0);      
+      if(executedMoves == 7){ moving = 0; currentPosition = target; }
+    }
+  }
+  if(!moving){
+   leftMotor->drive(0); 
+   rightMotor->drive(0);
+   return 1;
+  }
   return 0;
 }
