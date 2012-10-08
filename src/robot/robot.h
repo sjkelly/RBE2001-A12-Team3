@@ -9,8 +9,9 @@
 #define LIFT_SERVO 13
 #define WRIST_SERVO 12
 
+#define TOP_BUMPER 1
+#define BOT_BUMPER 0
 #define BUMPER_PIN 18
-#define BUMPER_INTERRUPT 5
 
 #define LEFT_1A 33
 #define LEFT_2A 34
