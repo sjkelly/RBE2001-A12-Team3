@@ -1,6 +1,4 @@
 #include <MsTimer2.h>
-
-//#include "TimerThree.h"
 #include "robot.h"
 
 #include "linesensor.h"
@@ -23,13 +21,12 @@ Move move(BUMPER_PIN, &lineSensor, &leftMotor, &rightMotor);
 int i =0;
 decisionEng theDecider(&actualField);
 btInterface mainBluetooth(&theDecider);
-
-
 volatile bool beatFlag = 0;
+
 void setup(){
   
   Serial.begin(9600);
-  MsTimer2::set(1000, beat);
+  MsTimer2::set(1000, heartBeat);
   attachInterrupt(leftMotor.interruptPin,leftEncoderISR,CHANGE);
   attachInterrupt(rightMotor.interruptPin,rightEncoderISR,CHANGE);
   MsTimer2::start();
@@ -44,28 +41,17 @@ void loop(){
   if(beatFlag)
   {
     mainBluetooth.sendHeartbeat();
-    Serial.println("Timer Tick!");
+    if(DEBUG)Serial.println("Timer Tick!");
     beatFlag = 0;
   }
-  //delay(1000);
-  //beat();
-  //if(DEBUG) debug(&lineSensor, &leftMotor, &rightMotor, &move);
-  /*
-  lineSensor.update();
- 
-  if(!i){
-    //move.to(0, FIELD_Y, 200);
-    //move.forward(30, 200, 255);
-    i++;
-  }
+  if(DEBUG) debug(&lineSensor, &leftMotor, &rightMotor, &move);
 
-  ///*
-  if(move.checkBumper())move.followLine(125);
-  else{
-    leftMotor.drive(0);
-    rightMotor.drive(0);
-  }
-  */
+
+//move.forward(150, 200, 0);
+  if(i == 0) i += move.forward(150, 250, 0);
+ 
+  if(i == 1) i += move.turn(180, 200);
+
 }
 
 
@@ -80,7 +66,7 @@ void leftEncoderISR(){
   leftMotor.count+=2;
 }
 
-void beat()
+void heartBeat()
 {
   beatFlag = 1;
 }
