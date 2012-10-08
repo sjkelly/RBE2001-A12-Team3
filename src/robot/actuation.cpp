@@ -1,21 +1,17 @@
+#include "actuation.h"
+
+
 Actuation::Actuation(uint8_t _clawPin, uint8_t _wristPin, uint8_t _liftPin, uint8_t _topPin, uint8_t _botPin)
 {
  clawPin  = _clawPin;
  wristPin = _wristPin;
  liftPin  = _liftPin;
  topPin   = _topPin;
- bootPin  = _bootPin;
+ botPin  = _botPin;
 }
 
 
-void Actuation::changeClawState(actState nextState)
-{
- desiredClawState = nextState;
-} 
-void Actuation::changeLiftState(actState nextState);
-{
- desiredLiftState = nextState;
-}
+
 
 bool Actuation::moveUp()
 {
@@ -60,7 +56,7 @@ void Actuation::closeClaw()
 {
  analogWrite(clawPin, CLOSE);
 }
-void Actuation::OpenClaw()
+void Actuation::openClaw()
 {
  analogWrite(clawPin, OPEN);
 }

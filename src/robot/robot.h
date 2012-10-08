@@ -5,9 +5,9 @@
 #define DEBUG 1
 
 /*** Pin Definitions ***/
-#define CLAW_SERVO
-#define ELEVATOR_SERVO
-#define WRIST_SERVO
+#define CLAW_SERVO 10
+#define LIFT_SERVO 13
+#define WRIST_SERVO 12
 
 #define BUMPER_PIN 18
 #define BUMPER_INTERRUPT 5
