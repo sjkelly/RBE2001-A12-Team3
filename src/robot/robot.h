@@ -1,16 +1,19 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
+
+
 /*** Use Options ***/
 #define DEBUG 1
 
 /*** Pin Definitions ***/
-#define CLAW_SERVO
-#define ELEVATOR_SERVO
-#define WRIST_SERVO
+#define CLAW_SERVO 10
+#define LIFT_SERVO 13
+#define WRIST_SERVO 12
 
+#define TOP_BUMPER 1
+#define BOT_BUMPER 0
 #define BUMPER_PIN 18
-#define BUMPER_INTERRUPT 5
 
 #define LEFT_1A 33
 #define LEFT_2A 34
