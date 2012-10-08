@@ -3,23 +3,30 @@
 //we should place this in a definitions file
 //as well as change the terminating character to something the standard probably doesn't use
 #define TERMINATOR '\0'
-btInterface::btInterface()
+btInterface::btInterface(decisionEng* _decider)
 {
  this->btID = ID;
+ decider = _decider;
  Serial3.begin(115200); 
 }
-void btInterface::btRecieve(void)
+bool btInterface::btRecieve(void)
 {
+ if(Serial3.available())
+ {
  uint8_t *btByte = &btBuffer[0];
  while(Serial3.available()<0)
   {
    *btByte = Serial3.read();
    btByte++;
   }
- //*btByte = TERMINATOR;
+  //*btByte = TERMINATOR;
+ return 1;
+ }
+ return 0;
+ 
 } 
 
-void btInterface::btHandle(void)
+void btInterface::btHandle()
 {
   uint8_t *btMessage = &btBuffer[0];
  //error checking, throws exception on error 
@@ -40,7 +47,7 @@ void btInterface::btHandle(void)
   //this is where we either hanld each bluetooth mesage or we create hooks into 
   //functions later in the proghram
   case STORAGE_TUBE:
-  
+  decider->state->storage.Byte = btMessage[3]<<4;
   if(DEBUG)
   {
     char dBuffer[20];
@@ -49,6 +56,13 @@ void btInterface::btHandle(void)
   }  
   break;
   case SUPPLY_TUBE:
+  decider->state->storage.Byte = btMessage[3];
+  if(DEBUG)
+  {
+    char dBuffer[20];
+    sprintf(dBuffer, "Storage tube %d available", btMessage[3]);
+    Serial.println(dBuffer);
+  }
   break;
   case RADIATION_ALERT:
   break;

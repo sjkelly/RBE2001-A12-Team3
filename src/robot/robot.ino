@@ -2,19 +2,28 @@
 
 //#include "TimerThree.h"
 #include "robot.h"
-#include "bluetooth.h"
+
 #include "linesensor.h"
 #include "move.h"
 #include "motor.h"
 #include "comms.h"
+#include "bluetooth.h"
+
+
+
+
 
 //Object Constructors
+fieldState actualField;
+
 LineSensor lineSensor(LINE_SENSOR_CHARGE_US,LINE_SENSOR_READ_US);
 Motor leftMotor(LEFT_ENCODER,LEFT_DRIVE,LEFT_1A,LEFT_2A);
 Motor rightMotor(RIGHT_ENCODER,RIGHT_DRIVE,RIGHT_1A,RIGHT_2A);
 Move move(BUMPER_PIN, &lineSensor, &leftMotor, &rightMotor);
 int i =0;
-btInterface mainBluetooth;
+decisionEng theDecider(&actualField);
+btInterface mainBluetooth(&theDecider);
+
 
 volatile bool beatFlag = 0;
 void setup(){
@@ -28,7 +37,10 @@ void setup(){
 
 
 void loop(){
-
+  if(mainBluetooth.btRecieve())
+  {
+    mainBluetooth.btHandle();
+  }
   if(beatFlag)
   {
     mainBluetooth.sendHeartbeat();

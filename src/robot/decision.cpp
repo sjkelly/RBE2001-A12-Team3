@@ -60,13 +60,13 @@ void decisionEng::spentMessage(uint8_t _mask)
 
 uint8_t decisionEng::determineDest()
 {
+ 
  Mask spentStorageState;
  spentStorageState.Byte = state->storage.Byte & 0B11110000; 
  Mask newStorageState;
  newStorageState.Byte = state->storage.Byte & 0B00001111;
  switch (state->clawContents)
  {
-  
   case SPENT_ROD:
    switch (leadingByte(spentStorageState))
    {

@@ -1,10 +1,11 @@
 #ifndef ___DECISION_____
 #define ___DECISION_____
 #include <stdint.h>
-//enumeration for the contents of our claw
+
+/*** Enumeratoins ***/
+//the enumeration for the contents of our claw and reactor tubes
 enum tubeState {NO_ROD = 0x00, SPENT_ROD = 0x2C, NEW_ROD = 0xFF};
-
-
+/*** Custom Structures ***/
 union Mask
 {
   uint8_t Byte;
@@ -31,13 +32,14 @@ struct fieldState
 class decisionEng
 {
  private:
-  
   fieldState *state;
  public:
   decisionEng(fieldState *_state);
   void supplyMessage(uint8_t _mask);
   void spentMessage(uint8_t _mask);
   uint8_t determineDest();
+  
+  friend class btInterface;
 };
 
 #endif

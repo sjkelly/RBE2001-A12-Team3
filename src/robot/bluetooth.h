@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include "Arduino.h"
 #include "robot.h"
+#include "decision.h"
 /*************
 The purpose of this file is to provide an easy to use interface for sending and
 recieving bluetooth messages from the master field coordinator. 
@@ -36,7 +37,6 @@ enum btType {STORAGE_TUBE = 0x01,
 //another enum for radiation levels
 enum btRadiation {SPENT = 0x2C, 
 		  NEW = 0xFF};
-
 class btInterface
 {
  private:
@@ -46,7 +46,9 @@ class btInterface
 
 //btID should represent our bluetooth id. I made it a variable so that it could be changed on runtime
    uint16_t btID;
-
+  
+   decisionEng *decider;
+   
 //this could be our buffer for storing bluetooth messages. We have to make sure we fill them as big
 //endian. 300 is just a rounnd number that is above the maximum message size, and is a round number. 
 //we should reduce this to gain some extra memory, it's kindof absurdly high right now.
@@ -61,8 +63,9 @@ class btInterface
 //exception upon failure
  public:
   
-  btInterface(void);
-  void btRecieve(void);
+  btInterface(decisionEng* _decider);
+  //returns 1 on recieved message, 0 on no message
+  bool btRecieve(void);
   void btSend(btType type, uint8_t *data, uint8_t destination);
 
 //btHandle will handle the bluetooth message. It takes a point16er to a bluetooth message, and optionally 
@@ -72,6 +75,8 @@ class btInterface
   void btHandle();
   
   void sendHeartbeat();
-
+   //buffers for the supply and new storage tube data
+   
+  friend class decisionEng;
 };
 #endif
