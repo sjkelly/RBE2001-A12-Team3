@@ -3,9 +3,9 @@
 
 Actuation::Actuation(uint8_t _clawPin, uint8_t _wristPin, uint8_t _liftPin, uint8_t _topPin, uint8_t _botPin)
 {
- clawPin  = _clawPin;
- wristPin = _wristPin;
- liftPin  = _liftPin;
+ clawServo.attach(_clawPin);
+ wristServo.attach(_wristPin);
+ liftServo.attach_liftPin);
  topPin   = _topPin;
  botPin  = _botPin;
 }
@@ -17,13 +17,13 @@ bool Actuation::moveUp()
 {
  if(currentLiftState != UP)
  {
-  analogWrite(liftPin, GOUP);
+  liftServo.write( GOUP);
   return 0;
  }
  else
  {
-  analogWrite(liftPin, STILL);
-  analogWrite(wristPin, FACEUP);
+  liftServo.write( STILL);
+  wristServo.write(FACEUP);
   return 1;
  }
 }
@@ -32,13 +32,13 @@ bool Actuation::moveDown()
 {
  if(currentLiftState != DOWN)
  {
-  analogWrite(liftPin, GODOWN);
-  analogWrite(wristPin, FACEDOWN);
+  liftServo.write( GODOWN);
+  wristServo.write(FACEDOWN);
   return 0;
  }
  else
  {
-  analogWrite(liftPin, STILL);
+  liftServo.write( STILL);
   return 1;
  }
 } 
@@ -54,9 +54,9 @@ void Actuation::upReach()
 
 void Actuation::closeClaw()
 {
- analogWrite(clawPin, CLOSE);
+ clawServo.write( CLOSE);
 }
 void Actuation::openClaw()
 {
- analogWrite(clawPin, OPEN);
+ clawServo.write( OPEN);
 }
