@@ -43,7 +43,7 @@ uint8_t Move::followLine(int16_t speed)
  else if(lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight&&lineSensor->wingRight&&lineSensor->wingLeft){
   leftMotor->drive(speed);
   rightMotor->drive(speed); 
-  if(lineSensor->consecutiveStates > LINE_SENSOR_CONSECUTIVE_READS){
+  if(lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS){
     lineSensor->consecutiveStates = 0;
     return 1;
   }
@@ -55,79 +55,76 @@ uint8_t Move::checkBumper(void){
   return !digitalRead(bumperPin);
 }
 
-void Move::turn180(int16_t speed){
- leftMotor->resetDistance();
- rightMotor->resetDistance();
- while(leftMotor->getDistance()<=DISTANCE180 && rightMotor->getDistance()<=DISTANCE180){
-   leftMotor->drive(speed*-1);
-   rightMotor->drive(speed);
+uint8_t Move::turn(int16_t angle, int16_t speed){
+ if(!turning){
+   leftMotor->resetDistance(); 
+   rightMotor->resetDistance();
+   turning = 1; //we are now turning
+   turnTarget = abs(WHEEL_SPACING_CM*PI*angle/360); //find our arc length target
  }
- rightMotor->drive(0);  
- leftMotor->drive(0); 
- if(DEBUG)Serial.println("Turn 180 finished!"); 
+ if(turning && leftMotor->getDistance()<=turnTarget && rightMotor->getDistance()<=turnTarget){
+   if(angle > 0){
+     leftMotor->drive(speed*-1);
+     rightMotor->drive(speed);
+   }
+   else if(angle < 0){
+     leftMotor->drive(speed);
+     rightMotor->drive(speed*-1);
+   }
+   return 0;
+ }
+ else {
+   rightMotor->drive(0);  
+   leftMotor->drive(0); 
+   if(DEBUG)Serial.println("Turn 180 finished!");
+   turning = 0;
+   turnTarget = 0;
+   return 1;
+ } 
 }
 
-void Move::turnRight(int16_t speed){ 
- leftMotor->resetDistance();
- rightMotor->resetDistance();
- while(leftMotor->getDistance()<=DISTANCE90 && rightMotor->getDistance()<=DISTANCE90)
- {
-   leftMotor->drive(speed);
-   rightMotor->drive(speed*-1);
- }
- rightMotor->drive(0);  
- leftMotor->drive(0); 
- if(DEBUG)Serial.println("Turn right finished!");
-}
-
-void Move::turnLeft(int16_t speed){
- leftMotor->resetDistance();
- rightMotor->resetDistance();
- while(leftMotor->getDistance()<=DISTANCE90 && rightMotor->getDistance()<=DISTANCE90)
- {
-   leftMotor->drive(speed*-1);
-
-   rightMotor->drive(speed);
-   //if(lineSensor->rearRight && lineSensor->rearLeft && lineSensor->consecutiveStates > LINE_SENSOR_CONSECUTIVE_READS) break;
- }
- rightMotor->drive(0);  
- leftMotor->drive(0); 
- if(DEBUG)Serial.println("Turn left finished!");
-}
-
-void Move::forward(double target, int16_t speed, uint8_t allowedCrosses){
-  leftMotor->resetDistance();
-  rightMotor->resetDistance();
-  volatile uint8_t crossedLines = 0;
-  volatile double avgDistance = 0;
-  volatile double startDistance = 0;
-  while(avgDistance<target)
-  {
-    crossedLines += followLine(speed);
-//    if(followLine(speed)){
-//      startDistance = avgDistance;
-//      while(avgDistance < (startDistance + target/20)){
-//        followLine(speed);
-//        avgDistance = leftMotor->getDistance()/2+rightMotor->getDistance()/2;  
-//      }
-//      crossedLines++;
-//    }
-    //if(avgDistance < target/10) speed /= 2;
-    avgDistance = leftMotor->getDistance()/2+rightMotor->getDistance()/2;
-//    if((crossedLines > allowedCrosses && avgDistance > target/10) || checkBumper()) break;
+uint8_t Move::forward(double target, int16_t speed, uint8_t allowedCrosses){
+  if(!drivingForward){
+    leftMotor->resetDistance();
+    rightMotor->resetDistance();
+    drivingForward = 1;
+    crossedLines = 0;
+    avgDistance = 0;
+    startDistance = 0;
+    acceptingCrosses = 1;
   }
-  leftMotor->drive(0);
-  rightMotor->drive(0);
-  if(DEBUG)Serial.println("Forward move finished!");
+  if(drivingForward && avgDistance<target)
+  {
+    if(followLine(speed) && acceptingCrosses && avgDistance > 3){ 
+      crossedLines++;
+      acceptingCrosses = 0;
+      startDistance = avgDistance;
+    }
+    if(avgDistance >= (startDistance + 3)) acceptingCrosses = 1;
+    
+    avgDistance = leftMotor->getDistance()/2+rightMotor->getDistance()/2;
+    if(crossedLines > allowedCrosses){
+      drivingForward = 0;
+      return 1;
+    }
+  }
+  if(!drivingForward || avgDistance>=target) {
+    leftMotor->drive(0);
+    rightMotor->drive(0);
+    if(DEBUG)Serial.println("Forward move finished!");
+    drivingForward = 0;
+    return 1;
+  }
+  return 0;
 }
 
-void Move::to(uint8_t target, int16_t speed){
-  if(target == currentPosition) return;
+uint8_t Move::to(uint8_t target, int16_t speed){
+  if(target == currentPosition) return 1;
   
-  //we will always want to backout and turn around
-  forward(20,-speed, 1); 
-  turn180(speed);
-  uint8_t moves;
+//  //we will always want to backout and turn around
+//  forward(20,-speed, 1); 
+//  turn(speed, 180);
+//  uint8_t moves;
 //  
 //  if(currentPosition[0] == targetX) moves = 1; //on the long line
 //  else if(currentPosition[1] == targetY) moves = 1; //going across field
@@ -153,5 +150,5 @@ void Move::to(uint8_t target, int16_t speed){
 //    
 //    
 //  }
-  
+  return 0;
 }

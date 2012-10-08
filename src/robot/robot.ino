@@ -36,13 +36,12 @@ void loop(){
   }
   if(DEBUG) debug(&lineSensor, &leftMotor, &rightMotor, &move);
 
-  if(!i){
-    //move.to(0, FIELD_Y, 200);
-    move.forward(50, 200, 0);
-    //move.turnLeft(200);
-    //move.turnRight(200);
-    i++;
-  }
+
+//move.forward(150, 200, 0);
+  if(i == 0) i += move.forward(150, 250, 0);
+ 
+  if(i == 1) i += move.turn(180, 200);
+
 }
 
 
