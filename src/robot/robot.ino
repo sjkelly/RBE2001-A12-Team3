@@ -40,18 +40,11 @@ void setup(){
   MsTimer2::start();
 }
 
-void _reachUp()
-{
-  mainActuation.upReach();
-}
-void _reachDown()
-{
-  mainActuation.downReach();
-}
 
 
 void loop(){
-  if(mainBluetooth.btRecieve())
+  mainActuation.moveUp();
+  /*if(mainBluetooth.btRecieve())
   {
     mainBluetooth.btHandle();
   }
@@ -68,7 +61,7 @@ void loop(){
   if(i == 0) i += move.forward(150, 250, 0);
  
   if(i == 1) i += move.turn(180, 200);
-
+*/
 }
 
 
@@ -89,3 +82,11 @@ void heartBeat()
 }
 
 
+void _reachUp()
+{
+  mainActuation.upReach();
+}
+void _reachDown()
+{
+  mainActuation.downReach();
+}
