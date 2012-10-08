@@ -1,8 +1,10 @@
-#include <Servo.h> 
+#include <Servo.h>
+#include <Arduino.h>
+ 
 
 // ROBS ELEVATOR
 // by ROB
-// This code is PROPRIETARY
+
 
 
 //////////////////////////////////////////
@@ -153,7 +155,7 @@ void decideGiveToTube ()
   if (masterFlag == 0) 
   {
 
-*/
+//*/
 
 
  
@@ -216,7 +218,7 @@ void executeElevatorAction ()
 
 
 
- 
+ /*
 void setup() 
 { 
   Serial.begin(9600);
@@ -242,3 +244,4 @@ void loop()
  
   if ((millis() - lastTime) >= 1500 && elevatorPosition != SOMEWHERE)   changeState = 1;    
 } 
+//*/
