@@ -65,8 +65,9 @@ void loop(){
 
 
 //move.forward(150, 200, 0);
-  if(i == 0) i += move.forward(150, 250, 0);
- 
+   if(i == 0) i += move.forward(150, 250, 0);
+   if(i == 1) i += move.turn(90, 200);
+   //if(i == 0) i+= move.to(REACTOR_B,200);
   if(i == 1) i += move.turn(180, 200);
 
 }
@@ -88,4 +89,13 @@ void heartBeat()
   beatFlag = 1;
 }
 
+
+void _reachUp()
+{
+  mainActuation.upReach();
+}
+void _reachDown()
+{
+  mainActuation.downReach();
+}
 

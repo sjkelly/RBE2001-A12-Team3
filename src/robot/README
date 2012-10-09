@@ -10,9 +10,3 @@ http://www.nongnu.org/avr-libc/user-manual/group__avr__stdint.html
 	typedef signed long long int 	int64_t
 	typedef unsigned long long int 	uint64_t
 
-NO POINTERS
-Create a union for related variables.
-
-Use camelCase for names.
-
-CAPITAL #DEFINES w/ underscore for spacing
