@@ -1,8 +1,8 @@
-#define GOUP 50
-#define GODOWN 130
-#define FACEUP 127
-#define FACEDOWN 15
-#define STILL 90
+#define GOUP 0
+#define GODOWN 0
+#define FACEUP 0
+#define FACEDOWN 0
+#define STILL 0
 #define OPEN 90
 #define CLOSE 250
 #include "robot.h"
