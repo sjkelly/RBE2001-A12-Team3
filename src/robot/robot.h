@@ -43,6 +43,8 @@
 #define LINE_SENSOR_READ_US 10 //How long we wait between 
 #define LINE_SENSOR_CONSECUTIVE_READS 1
 
+#define DEFSPEED 100
+
 
 /*** Field Lengths ***/
 #define FIELD_X 172

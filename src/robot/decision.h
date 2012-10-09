@@ -1,7 +1,7 @@
 #ifndef ___DECISION_____
 #define ___DECISION_____
 #include <stdint.h>
-
+#include "robot.h"
 /*** Enumeratoins ***/
 //the enumeration for the contents of our claw and reactor tubes
 enum tubeState {NO_ROD = 0x00, SPENT_ROD = 0x2C, NEW_ROD = 0xFF};

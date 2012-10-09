@@ -9,7 +9,7 @@
 #include "Actuation.h"
 
 
-
+void resetField(fieldState *_fieldstate);
 
 
 //Object Constructors
@@ -39,17 +39,9 @@ void setup(){
   attachInterrupt(BOT_BUMPER, _reachDown, FALLING);
   MsTimer2::start();
   resetField(&actualField);
-  destination = theDecider.detrmine();
+  destination = theDecider.determineDest();
 }
 
-void _reachUp()
-{
-  mainActuation.upReach();
-}
-void _reachDown()
-{
-  mainActuation.downReach();
-}
 
 
 void loop(){
@@ -65,27 +57,27 @@ void loop(){
   }
   if(DEBUG) debug(&lineSensor, &leftMotor, &rightMotor, &move);
 
-  if(move.to(destination))
+  if(move.to(destination, DEFSPEED))
   {
    switch(destination)
    {
     case REACTOR_A:
     case REACTOR_B:
-    if(actualField.(destination == REACTOR_A)?reactorA:reactorB = SPENT_ROD)
-    {
+     if((destination == REACTOR_A)?actualField.reactorA:actualField.reactorB == SPENT_ROD)
+     {
       //insert actuation code here, check for successful completion
       actualField.clawContents = SPENT_ROD;
-      actualField.(destination == REACTOR_A)?reactorA:reactorB = NO_ROD;
+      (destination == REACTOR_A)?actualField.reactorA:actualField.reactorB = NO_ROD;
       destination = theDecider.determineDest();
-    }
-    else
-    {
-     //inserto actuation code, check for sucessful complettion
-     actualField.(destination == REACTOR_A)?reactorA:reactorB = NEW_ROD;
-     destination = theDecider.determineDest();
-     actualField.clawContents = NO_ROD;
-    }
-    break;
+     }
+     else
+     {
+      //inserto actuation code, check for sucessful complettion
+      (destination == REACTOR_A)?actualField.reactorA:actualField.reactorB = NEW_ROD;
+      destination = theDecider.determineDest();
+      actualField.clawContents = NO_ROD;
+     }
+     break;
     case SPENT_1:
     case SPENT_2:
     case SPENT_3:
@@ -117,7 +109,7 @@ void resetField(fieldState *_fieldstate)
 {
  _fieldstate->clawContents = NO_ROD;
  _fieldstate->reactorA = SPENT_ROD;
- _fieldstate->reactorB = NEW_ROD;
+ _fieldstate->reactorB = SPENT_ROD;
 }
 /*** ISRs ***/
 //Cannot be class methods!
