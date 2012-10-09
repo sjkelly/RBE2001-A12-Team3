@@ -1,5 +1,3 @@
-
-
 #define GOUP 50
 #define GODOWN 130
 #define FACEUP 127
