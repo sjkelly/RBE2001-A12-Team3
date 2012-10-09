@@ -6,7 +6,7 @@ Move::Move(uint8_t _bumperPin, LineSensor* _lineSensor, Motor* _leftMotor, Motor
   digitalWrite(_bumperPin, HIGH);       // turn on pullup resistors for our switch
   bumperPin = _bumperPin;
   atIntersection = 0;
-  currentPosition = REACTOR_A;
+  currentPosition = SPENT_2;
   lineSensor = _lineSensor;
   leftMotor = _leftMotor;
   rightMotor = _rightMotor;
@@ -74,7 +74,7 @@ uint8_t Move::turn(int16_t angle, int16_t speed){
    else if (angle%90 == 0 && lineSensor->rearRight && lineSensor->rearLeft && lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS){
      rightMotor->drive(0);  
      leftMotor->drive(0); 
-     if(DEBUG)Serial.println("Turn 180 finished!");
+     if(DEBUG)Serial.println("Turn finished!");
      turning = 0;
      turnTarget = 0;
      return 1;
@@ -84,7 +84,7 @@ uint8_t Move::turn(int16_t angle, int16_t speed){
  else {
    rightMotor->drive(0);  
    leftMotor->drive(0); 
-   if(DEBUG)Serial.println("Turn 180 finished!");
+   if(DEBUG)Serial.println("Turn finished!");
    turning = 0;
    turnTarget = 0;
    return 1;
@@ -115,6 +115,7 @@ uint8_t Move::forward(double target, int16_t speed, uint8_t allowedCrosses){
       drivingForward = 0;
       leftMotor->drive(0);
       rightMotor->drive(0);   
+      if(DEBUG)Serial.println("Forward move finished!");
       return 1;
     }
   }
@@ -188,29 +189,38 @@ uint8_t Move::to(uint8_t target, int16_t speed){
       if(currentPosition > NEW_4 && currentPosition - 4 < target) turnFirst = 90;
     } 
     moving = 1;
+    if(DEBUG){
+      Serial.print("Move values > ");
+      Serial.print(" turnFirst:");
+      Serial.print(turnFirst);
+      Serial.print(" moveCrosses:");
+      Serial.print(moveCrosses);
+      Serial.print(" forwardLength:");
+      Serial.println(turnFirst);
+    }
   }
   if(moving){
     if(moves == 1){
       if(executedMoves == 0) executedMoves += forward(20,-speed, 1); //reverse 20
       if(executedMoves == 1) executedMoves += turn(speed, 180); 
       if(executedMoves == 2) executedMoves += forward(forwardLength,speed, moveCrosses);
-      if(executedMoves == 4){ moving = 0; currentPosition = target; }
+      if(executedMoves == 3){ moving = 0; currentPosition = target; }
     }
     else if(moves == 2){
       if(executedMoves == 0) executedMoves += forward(20,-speed, 1); 
-      if(executedMoves == 1) executedMoves += turn(speed, 180);
+      if(executedMoves == 1) executedMoves += turn(180, speed);
       if(executedMoves == 2) executedMoves += forward(FIELD_Y,speed, 0);
-      if(executedMoves == 3) executedMoves += turn(speed, turnFirst);
+      if(executedMoves == 3) executedMoves += turn(turnFirst, speed);
       if(executedMoves == 4) executedMoves += forward(forwardLength, speed, moveCrosses);      
       if(executedMoves == 5){ moving = 0; currentPosition = target; }
     }
     else if(moves == 3){ //moves == 3
       if(executedMoves == 0) executedMoves += forward(20,-speed, 1); 
-      if(executedMoves == 1) executedMoves += turn(speed, 180);
+      if(executedMoves == 1) executedMoves += turn(180, speed);
       if(executedMoves == 2) executedMoves += forward(FIELD_X/2,speed, 0);
-      if(executedMoves == 3) executedMoves += turn(speed, turnFirst);
+      if(executedMoves == 3) executedMoves += turn(turnFirst, speed);
       if(executedMoves == 4) executedMoves += forward(forwardLength, speed, moveCrosses);
-      if(executedMoves == 5) executedMoves += turn(speed, turnFirst*-1);
+      if(executedMoves == 5) executedMoves += turn(turnFirst*-1, speed);
       if(executedMoves == 6) executedMoves += forward(FIELD_X/2,speed, 0);      
       if(executedMoves == 7){ moving = 0; currentPosition = target; }
     }
