@@ -17,10 +17,10 @@ class Actuation
 {
  private:
   actLiftState currentLiftState;
-  uint8_t topPin, botPin;
   Servo *clawServo;
   Servo *wristServo;
   Servo *liftServo;
+  uint8_t topPin, botPin, clawPin, wristPin, liftPin;
  public:
   Actuation(Servo*, Servo*, Servo*, uint8_t _topPin, uint8_t _botPin); 
   //1 on already as high or low as can go

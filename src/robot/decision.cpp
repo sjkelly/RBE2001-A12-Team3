@@ -71,49 +71,53 @@ uint8_t decisionEng::determineDest()
    switch (leadingByte(spentStorageState))
    {
     case 1:
-    //return spent storage 1
+     return SPENT_1;
     break;
     case 2:
-    //return spent storage 2
+     return SPENT_2;
     break;
     case 3:
-    //return spent storage 3
+     return SPENT_3;
     break;
     case 4:
-    //return spent storage 4
+     return SPENT_4;
     break;
    } 
    break;
   case NEW_ROD:
-   if(state->reactorA == NO_ROD){}
-    //return reactor A
+   if(state->reactorA == NO_ROD)
+    return REACTOR_A;
    else{}
-    //return reactor B
+    return REACTOR_B;
    break;
   case NO_ROD:
    if ((state->reactorA == NO_ROD)||(state->reactorB == NO_ROD))
     switch (precedingByte(newStorageState))
     {
      case 1:
-     //return new storage 1
+      return NEW_1;
      break;
      case 2:
-     //return new storage 2
+      return NEW_1;
      break;
      case 3:
-     //return new storage 3
+      return NEW_1;
      break;
      case 4:
-     //return new storage 4
+      return NEW_1;
      break;
     }
-   else if ((state->reactorA == SPENT_ROD)){}
-    //return reactor A
-   else if ((state->reactorB == SPENT_ROD)){}
-    //return reactor B
-   else{}
-   //this last case will only occur when we have finished all of our actions
-   //we can reset the field state here
+   else if ((state->reactorA == SPENT_ROD))
+    return REACTOR_A;
+   else if ((state->reactorB == SPENT_ROD))
+    return REACTOR_B;
+   else
+   {
+    state->clawContents = NO_ROD;
+    state->reactorA = SPENT_ROD;
+    state->reactorB = SPENT_ROD;
+    return REACTOR_A;
+   }
  }
 }
 //these are some uncommited changes
