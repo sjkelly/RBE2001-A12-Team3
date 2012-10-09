@@ -14,7 +14,7 @@
 
 //Object Constructors
 fieldState actualField;
-
+uint8_t destination;
 Actuation mainActuation(CLAW_SERVO, WRIST_SERVO, LIFT_SERVO, TOP_BUMPER, BOT_BUMPER);
 LineSensor lineSensor(LINE_SENSOR_CHARGE_US,LINE_SENSOR_READ_US);
 Motor leftMotor(LEFT_ENCODER,LEFT_DRIVE,LEFT_1A,LEFT_2A);
@@ -38,6 +38,8 @@ void setup(){
   attachInterrupt(TOP_BUMPER, _reachUp, FALLING);
   attachInterrupt(BOT_BUMPER, _reachDown, FALLING);
   MsTimer2::start();
+  resetField(&actualField);
+  destination = theDecider.detrmine();
 }
 
 void _reachUp()
@@ -63,16 +65,60 @@ void loop(){
   }
   if(DEBUG) debug(&lineSensor, &leftMotor, &rightMotor, &move);
 
-
+  if(move.to(destination))
+  {
+   switch(destination)
+   {
+    case REACTOR_A:
+    case REACTOR_B:
+    if(actualField.(destination == REACTOR_A)?reactorA:reactorB = SPENT_ROD)
+    {
+      //insert actuation code here, check for successful completion
+      actualField.clawContents = SPENT_ROD;
+      actualField.(destination == REACTOR_A)?reactorA:reactorB = NO_ROD;
+      destination = theDecider.determineDest();
+    }
+    else
+    {
+     //inserto actuation code, check for sucessful complettion
+     actualField.(destination == REACTOR_A)?reactorA:reactorB = NEW_ROD;
+     destination = theDecider.determineDest();
+     actualField.clawContents = NO_ROD;
+    }
+    break;
+    case SPENT_1:
+    case SPENT_2:
+    case SPENT_3:
+    case SPENT_4:
+     //insert actuation code her, checkfor successful completion     
+     actualField.clawContents = NO_ROD;
+     destination = theDecider.determineDest();
+     break;
+    case NEW_1:
+    case NEW_2:
+    case NEW_3:
+    case NEW_4:
+     //insert actuation code here, check for successful completion
+     actualField.clawContents = NEW_ROD;
+     destination = theDecider.determineDest();
+     break;
+   }
+  }   
+/*   
 //move.forward(150, 200, 0);
    if(i == 0) i += move.forward(150, 250, 0);
    if(i == 1) i += move.turn(90, 200);
    //if(i == 0) i+= move.to(REACTOR_B,200);
   if(i == 1) i += move.turn(180, 200);
-
+*/
 }
-
-
+//A helper that resets the field state
+void resetField(fieldState *_fieldstate)
+{
+ _fieldstate->clawContents = NO_ROD;
+ _fieldstate->reactorA = SPENT_ROD;
+ _fieldstate->reactorB = NEW_ROD;
+}
 /*** ISRs ***/
 //Cannot be class methods!
 
@@ -98,4 +144,3 @@ void _reachDown()
 {
   mainActuation.downReach();
 }
-
