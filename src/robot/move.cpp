@@ -80,8 +80,8 @@ uint8_t Move::turn(int16_t angle, int16_t speed){
      if(DEBUG)Serial.println("Turn finished!");
      turning = 0;
      turnTarget = 0;
-     return 1; 
-   } */
+     return 1;
+   }*/
    return 0;
  }
  else {

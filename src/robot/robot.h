@@ -34,16 +34,16 @@
 
 #define ENCODER_CPR 3200
 #define WHEEL_RADIUS_CM 3.4925
-#define WHEEL_SPACING_CM 24.130
+#define WHEEL_SPACING_CM 23.7
 
 /*** Tuning Defines ***/
 #define RIGHT_LINE_FOLLOW_PROP -0.2
 #define LEFT_LINE_FOLLOW_PROP -0.2
-#define LINE_SENSOR_CHARGE_US 2  //How long we charge the capacitor
-#define LINE_SENSOR_READ_US 10 //How long we wait between 
-#define LINE_SENSOR_CONSECUTIVE_READS 1
+#define LINE_SENSOR_CHARGE_US 5  //How long we charge the capacitor
+#define LINE_SENSOR_READ_US 20 //How long we wait between 
+#define LINE_SENSOR_CONSECUTIVE_READS 5
 
-#define DEFSPEED 100
+#define DEFSPEED 200
 
 
 /*** Field Lengths ***/

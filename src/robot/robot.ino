@@ -21,7 +21,7 @@ Motor rightMotor(RIGHT_ENCODER,RIGHT_DRIVE,RIGHT_1A,RIGHT_2A);
 Move move(BUMPER_PIN, &lineSensor, &leftMotor, &rightMotor);
 Servo clawServo, wristServo, liftServo;
 Actuation mainActuation(&clawServo, &wristServo, &liftServo, TOP_BUMPER, BOT_BUMPER);
-int i = 0;
+int i = 0, startUp = 1, startSequence = 0;
 decisionEng theDecider(&actualField);
 btInterface mainBluetooth(&theDecider);
 volatile bool beatFlag = 0;
@@ -61,8 +61,33 @@ void loop(){
     beatFlag = 0;
   }
   if(DEBUG) debug(&lineSensor, &leftMotor, &rightMotor, &move);
-
-  if(move.to(destination, DEFSPEED))
+  
+  
+  //startup sequence to get us to the reactor at the start
+  if(startUp){
+    switch(startSequence)
+    {
+    case 0:
+      startSequence += move.forward(50,DEFSPEED, 0); 
+      break;  
+    case 1:
+      startSequence += move.turn(90, DEFSPEED); 
+      break;
+    case 2:
+      startSequence += move.forward(50,DEFSPEED, 0); 
+      break;
+    case 3:
+      startSequence += move.turn(90,DEFSPEED); 
+      break;
+    case 4:
+      startSequence += move.forward(50,DEFSPEED, 0);
+      break;
+    case 5: 
+      startUp = 0;
+      break; 
+    }
+  }
+  else if(!startUp && move.to(destination, DEFSPEED))
   {
    switch(destination)
    {
@@ -102,11 +127,6 @@ void loop(){
    }
   }   
   
-//move.forward(150, 200, 0);
-  // if(i == 0) i += move.forward(150, 250, 0);
-  // if(i == 1) i += move.turn(90, 200);
-   if(i == 0) i+= move.to(NEW_1,200);
-  //if(i == 1) i += move.turn(180, 200);
 }
 //A helper that resets the field state
 void resetField(fieldState *_fieldstate)
