@@ -4,7 +4,7 @@
 
 
 /*** Use Options ***/
-#define DEBUG 1
+#define DEBUG 0
 
 /*** Pin Definitions ***/
 #define CLAW_SERVO 10

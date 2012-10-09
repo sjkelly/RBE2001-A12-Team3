@@ -76,7 +76,8 @@ uint8_t Move::turn(int16_t angle, int16_t speed){
      leftMotor->drive(0); 
      if(DEBUG)Serial.println("Turn 180 finished!");
      turning = 0;
-     turnTarget = 0; 
+     turnTarget = 0;
+     return 1;
    }
    return 0;
  }

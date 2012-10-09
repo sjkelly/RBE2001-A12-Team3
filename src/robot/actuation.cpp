@@ -1,29 +1,26 @@
 #include "actuation.h"
 
 
-Actuation::Actuation(uint8_t _clawPin, uint8_t _wristPin, uint8_t _liftPin, uint8_t _topPin, uint8_t _botPin)
+Actuation::Actuation(Servo* _clawServo, Servo* _wristServo, Servo* _liftServo, uint8_t _topPin, uint8_t _botPin)
 {
- clawServo.attach(_clawPin);
- wristServo.attach(_wristPin);
- liftServo.attach_liftPin);
+ clawServo = _clawServo;
+ wristServo = _wristServo;
+ liftServo = _liftServo;
  topPin   = _topPin;
  botPin  = _botPin;
 }
-
-
-
 
 bool Actuation::moveUp()
 {
  if(currentLiftState != UP)
  {
-  liftServo.write( GOUP);
+  liftServo->write( GOUP);
   return 0;
  }
  else
  {
-  liftServo.write( STILL);
-  wristServo.write(FACEUP);
+  liftServo->write( STILL);
+  wristServo->write(FACEUP);
   return 1;
  }
 }
@@ -32,13 +29,13 @@ bool Actuation::moveDown()
 {
  if(currentLiftState != DOWN)
  {
-  liftServo.write( GODOWN);
-  wristServo.write(FACEDOWN);
+  liftServo->write( GODOWN);
+  wristServo->write(FACEDOWN);
   return 0;
  }
  else
  {
-  liftServo.write( STILL);
+  liftServo->write( STILL);
   return 1;
  }
 } 
@@ -54,9 +51,9 @@ void Actuation::upReach()
 
 void Actuation::closeClaw()
 {
- clawServo.write( CLOSE);
+ clawServo->write( CLOSE);
 }
 void Actuation::openClaw()
 {
- clawServo.write( OPEN);
+ clawServo->write( OPEN);
 }
