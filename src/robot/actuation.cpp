@@ -3,6 +3,7 @@
 
 Actuation::Actuation(uint8_t _clawPin, uint8_t _wristPin, uint8_t _liftPin, uint8_t _topPin, uint8_t _botPin)
 {
+
  clawPin = _clawPin;
  wristPin = _wristPin;
  liftPin = _liftPin;
@@ -22,6 +23,7 @@ bool Actuation::moveUp()
  }
  else
  {
+
   analogWrite(liftPin, STILL);
   analogWrite(wristPin,FACEUP);
   return 1;
@@ -32,6 +34,7 @@ bool Actuation::moveDown()
 {
  if(currentLiftState != DOWN)
  {
+
   analogWrite(liftPin, GODOWN);
   analogWrite(wristPin,FACEDOWN);
   return 0;
