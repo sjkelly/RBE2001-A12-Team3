@@ -1,8 +1,5 @@
 #include "motor.h"
 
-Motor::Motor(){
-}
-
 Motor::Motor(int8_t _encPin, int8_t _drivePin, int8_t _oneA, int8_t _twoA)
 {
  pinMode(_oneA, OUTPUT);

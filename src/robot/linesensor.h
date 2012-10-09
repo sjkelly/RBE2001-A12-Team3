@@ -11,7 +11,6 @@
 
 class LineSensor{
   public:
-  LineSensor();
   LineSensor(uint16_t,uint16_t);
   void update();
   uint8_t state, consecutiveStates;
