@@ -44,12 +44,13 @@ void setup(){
   MsTimer2::start();
   resetField(&actualField);
   destination = theDecider.determineDest();
+  mainActuation.moveUp();
 }
 
 
 
 void loop(){
-  mainActuation.moveUp();
+  
   if(mainBluetooth.btRecieve())
   {
     mainBluetooth.btHandle();
@@ -61,7 +62,6 @@ void loop(){
     beatFlag = 0;
   }
   if(DEBUG) debug(&lineSensor, &leftMotor, &rightMotor, &move);
-
   if(move.to(destination, DEFSPEED))
   {
    switch(destination)
@@ -70,24 +70,30 @@ void loop(){
     case REACTOR_B:
      if((destination == REACTOR_A)?actualField.reactorA:actualField.reactorB == SPENT_ROD)
      {
-      //insert actuation code here, check for successful completion
-      actualField.clawContents = SPENT_ROD;
-      (destination == REACTOR_A)?actualField.reactorA:actualField.reactorB = NO_ROD;
-      destination = theDecider.determineDest();
-     }
+       mainActuation.closeClaw();
+      if(mainActuation.moveUp())//insert actuation code here, check for successful completion
+      {
+       actualField.clawContents = SPENT_ROD;
+       (destination == REACTOR_A)?actualField.reactorA:actualField.reactorB = NO_ROD;
+       destination = theDecider.determineDest();
+      }
+    }
      else
      {
-      //inserto actuation code, check for sucessful complettion
-      (destination == REACTOR_A)?actualField.reactorA:actualField.reactorB = NEW_ROD;
-      destination = theDecider.determineDest();
-      actualField.clawContents = NO_ROD;
+      if(mainActuation.moveDown())//inserto actuation code, check for sucessful complettion
+      {
+        mainActuation.openClaw();
+       (destination == REACTOR_A)?actualField.reactorA:actualField.reactorB = NEW_ROD;
+       destination = theDecider.determineDest();
+       actualField.clawContents = NO_ROD;
+      }
      }
      break;
     case SPENT_1:
     case SPENT_2:
     case SPENT_3:
     case SPENT_4:
-     //insert actuation code her, checkfor successful completion     
+     mainActuation.openClaw();   
      actualField.clawContents = NO_ROD;
      destination = theDecider.determineDest();
      break;
@@ -95,13 +101,35 @@ void loop(){
     case NEW_2:
     case NEW_3:
     case NEW_4:
-     //insert actuation code here, check for successful completion
+     mainActuation.closeClaw();
      actualField.clawContents = NEW_ROD;
      destination = theDecider.determineDest();
-     break;
+     
    }
-  }   
-  
+  }
+  else
+  {
+    switch(destination)
+    {
+     case NEW_1:
+     case NEW_2:
+     case NEW_3:
+     case NEW_4:
+     case SPENT_1:
+     case SPENT_2:
+     case SPENT_3:
+     case SPENT_4:
+      mainActuation.moveUp();
+      break;
+     case REACTOR_A:
+     case REACTOR_B:
+      if(actualField.clawContents == NO_ROD)
+       mainActuation.moveDown();
+      
+     
+    }
+  }
+  mainActuation.updateClaw();
 //move.forward(150, 200, 0);
   // if(i == 0) i += move.forward(150, 250, 0);
   // if(i == 1) i += move.turn(90, 200);

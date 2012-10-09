@@ -13,10 +13,12 @@
 #define CLOSE 250
 
 enum actLiftState {UP=1, DOWN=0};
+enum actClawState {CLOSED=1, OPENED = 0};
 class Actuation
 {
  private:
-  actLiftState currentLiftState;
+  volatile actLiftState currentLiftState;
+  actClawState currentClaw, desiredClaw;
   Servo *clawServo;
   Servo *wristServo;
   Servo *liftServo;
@@ -24,12 +26,13 @@ class Actuation
  public:
   Actuation(Servo*, Servo*, Servo*, uint8_t _topPin, uint8_t _botPin); 
   //1 on already as high or low as can go
-  bool moveUp();
-  bool moveDown();
+  uint8_t moveUp();
+  uint8_t moveDown();
   void downReach();
   void upReach();
   void closeClaw();
   void openClaw();
+  void updateClaw();
 };
 
 #endif

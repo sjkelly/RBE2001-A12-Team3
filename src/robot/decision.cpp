@@ -105,7 +105,6 @@ uint8_t decisionEng::determineDest()
      break;
      case 4:
       return NEW_1;
-     break;
     }
    else if ((state->reactorA == SPENT_ROD))
     return REACTOR_A;

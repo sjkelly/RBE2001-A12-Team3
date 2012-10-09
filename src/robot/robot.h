@@ -1,8 +1,8 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
-
-
+#define SERVO_RESPONSE 10 //time servo takes to respon in milliseconds
+#define START_CLAW CLOSED
 /*** Use Options ***/
 #define DEBUG 0
 
