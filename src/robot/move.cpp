@@ -5,11 +5,13 @@ Move::Move(uint8_t _bumperPin, LineSensor* _lineSensor, Motor* _leftMotor, Motor
   pinMode(_bumperPin, INPUT);
   digitalWrite(_bumperPin, HIGH);       // turn on pullup resistors for our switch
   bumperPin = _bumperPin;
-  atIntersection = 0;
   currentPosition = SPENT_2;
   lineSensor = _lineSensor;
   leftMotor = _leftMotor;
   rightMotor = _rightMotor;
+  turning = 0;
+  drivingForward = 0; 
+  moving = 0;
 }
 
 uint8_t Move::followLine(int16_t speed)
@@ -71,14 +73,15 @@ uint8_t Move::turn(int16_t angle, int16_t speed){
      leftMotor->drive(speed);
      rightMotor->drive(speed*-1);
    }
-   else if (angle%90 == 0 && lineSensor->rearRight && lineSensor->rearLeft && lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS){
+   /*if (angle%90 == 0 && lineSensor->rearRight && lineSensor->rearLeft && lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS && 
+       leftMotor->getDistance() > 3 && rightMotor->getDistance() > 3){
      rightMotor->drive(0);  
      leftMotor->drive(0); 
      if(DEBUG)Serial.println("Turn finished!");
      turning = 0;
      turnTarget = 0;
-     return 1;
-   }
+     return 1; 
+   } */
    return 0;
  }
  else {
@@ -112,6 +115,7 @@ uint8_t Move::forward(double target, int16_t speed, uint8_t allowedCrosses){
     
     avgDistance = leftMotor->getDistance()/2+rightMotor->getDistance()/2;
     if(crossedLines > allowedCrosses){
+      crossedLines = 0;
       drivingForward = 0;
       leftMotor->drive(0);
       rightMotor->drive(0);   
@@ -123,6 +127,7 @@ uint8_t Move::forward(double target, int16_t speed, uint8_t allowedCrosses){
     leftMotor->drive(0);
     rightMotor->drive(0);
     if(DEBUG)Serial.println("Forward move finished!");
+    crossedLines = 0;
     drivingForward = 0;
     return 1;
   }
@@ -189,6 +194,7 @@ uint8_t Move::to(uint8_t target, int16_t speed){
       if(currentPosition > NEW_4 && currentPosition - 4 < target) turnFirst = 90;
     } 
     moving = 1;
+    forwardLength = FIELD_Y;
     if(DEBUG){
       Serial.print("Move values > ");
       Serial.print(" turnFirst:");
@@ -196,7 +202,7 @@ uint8_t Move::to(uint8_t target, int16_t speed){
       Serial.print(" moveCrosses:");
       Serial.print(moveCrosses);
       Serial.print(" forwardLength:");
-      Serial.println(turnFirst);
+      Serial.println(forwardLength);
     }
   }
   if(moving){
