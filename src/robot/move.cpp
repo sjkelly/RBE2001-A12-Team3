@@ -16,48 +16,50 @@ Move::Move(uint8_t _bumperPin, LineSensor* _lineSensor, Motor* _leftMotor, Motor
 
 uint8_t Move::followLine(int16_t speed)
 {
- if(!lineSensor->frontLeft&&!lineSensor->frontCenter&&!lineSensor->frontRight)
+ if(!lineSensor->wingLeft && !lineSensor->frontLeft && !lineSensor->frontCenter && !lineSensor->frontRight && lineSensor->wingRight) //extreme right -> extreme left (4)
  {
   leftMotor->drive(speed);
-  rightMotor->drive(speed);
+  rightMotor->drive(speed*ERR_4);
  }
- else if(!lineSensor->frontLeft&&!lineSensor->frontCenter&&lineSensor->frontRight){
-  leftMotor->drive(speed*0.9);
-  rightMotor->drive(speed*0.5);
+ else if(!lineSensor->wingLeft && !lineSensor->frontLeft && !lineSensor->frontCenter && lineSensor->frontRight && lineSensor->wingRight){ // med/ex right -> med/ex left (3)
+  leftMotor->drive(speed);
+  rightMotor->drive(speed*ERR_3);
  }
- else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight){
+ else if(!lineSensor->wingLeft && !lineSensor->frontLeft && !lineSensor->frontCenter && lineSensor->frontRight && !lineSensor->wingRight){ // med right -> med left (2)
+  leftMotor->drive(speed);
+  rightMotor->drive(speed*ERR_2);
+ }
+ else if(!lineSensor->wingLeft && !lineSensor->frontLeft && lineSensor->frontCenter && lineSensor->frontRight && !lineSensor->wingRight){ // slight right -> slight left (1)
+  leftMotor->drive(speed);
+  rightMotor->drive(speed*ERR_1);
+ }
+ else if(!lineSensor->wingLeft && !lineSensor->frontLeft && lineSensor->frontCenter && !lineSensor->frontRight && !lineSensor->wingRight){ //straight -> straight (0)
   leftMotor->drive(speed);
   rightMotor->drive(speed);
  }
- else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight){
-  leftMotor->drive(speed*0.8);
-  rightMotor->drive(speed*0.6);
+ else if(!lineSensor->wingLeft && lineSensor->frontLeft && lineSensor->frontCenter && !lineSensor->frontRight && !lineSensor->wingRight){ // slight left -> slight right (1)
+  leftMotor->drive(speed*ERR_1);
+  rightMotor->drive(speed);
  }
- else if(lineSensor->frontLeft&&!lineSensor->frontCenter&&!lineSensor->frontRight){
-  leftMotor->drive(speed*0.5);
-  rightMotor->drive(speed*0.9);
+ else if(!lineSensor->wingLeft && lineSensor->frontLeft && !lineSensor->frontCenter && !lineSensor->frontRight && !lineSensor->wingRight){ // med left -> med right (2)
+  leftMotor->drive(speed*ERR_2);
+  rightMotor->drive(speed);
  }
- else if(lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight){
-  leftMotor->drive(speed*0.6);
-  rightMotor->drive(speed*0.8);
+ else if(lineSensor->wingLeft && lineSensor->frontLeft && !lineSensor->frontCenter && !lineSensor->frontRight && !lineSensor->wingRight){ // med/ex left -> med/ex right (3)
+  leftMotor->drive(speed*ERR_3);
+  rightMotor->drive(speed);
  }
- else if(lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight&&lineSensor->wingRight&&lineSensor->wingLeft){
+ else if(lineSensor->wingLeft && !lineSensor->frontLeft && !lineSensor->frontCenter && !lineSensor->frontRight && !lineSensor->wingRight){ // extreme left -> extreme right (4)
+  leftMotor->drive(speed*ERR_4);
+  rightMotor->drive(speed);
+ }
+ else if(lineSensor->wingLeft && lineSensor->frontLeft && lineSensor->frontCenter && lineSensor->frontRight && lineSensor->wingRight){ // perpendicularLine -> STOP
   leftMotor->drive(speed);
   rightMotor->drive(speed); 
   if(lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS){
     lineSensor->consecutiveStates = 0;
     return 1;
   }
- else if(lineSensor->frontLeft){
-  leftMotor->drive(0);
-  rightMotor->drive(speed);   
-   
- }
- else if(lineSensor->frontRight){
-  leftMotor->drive(speed);
-  rightMotor->drive(0);   
-   
- }
  }
  return 0;
 }
@@ -77,11 +79,11 @@ uint8_t Move::turn(int16_t angle, int16_t speed){
  if(turning && leftMotor->getDistance()<=turnTarget && rightMotor->getDistance()<=turnTarget){
    if(angle > 0){
      leftMotor->drive(speed*-1);
-     rightMotor->drive(speed*0.9);
+     rightMotor->drive(speed);
    }
    else if(angle < 0){
      leftMotor->drive(speed);
-     rightMotor->drive(speed*-0.9);
+     rightMotor->drive(speed*-1);
    }
    if (angle%90 == 0 && lineSensor->rearRight && lineSensor->rearLeft && lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS && 
        leftMotor->getDistance() >= turnTarget - 2 && rightMotor->getDistance() > turnTarget - 2){

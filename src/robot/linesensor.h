@@ -13,8 +13,8 @@ class LineSensor{
   public:
   LineSensor(uint16_t,uint16_t);
   void update();
-  uint8_t state, consecutiveStates;
-  uint8_t frontLeft, frontRight, frontCenter, wingLeft, wingRight, rearRight, rearLeft;
+  volatile uint8_t state, consecutiveStates;
+  volatile uint8_t frontLeft, frontRight, frontCenter, wingLeft, wingRight, rearRight, rearLeft;
   private:
   uint16_t charge, read;
   uint8_t lastState;

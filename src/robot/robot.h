@@ -4,7 +4,7 @@
 
 
 /*** Use Options ***/
-#define DEBUG 0
+#define DEBUG 1
 
 /*** Pin Definitions ***/
 #define CLAW_SERVO 10
@@ -39,13 +39,22 @@
 /*** Tuning Defines ***/
 #define RIGHT_PROPORTION .95
 #define LEFT_PROPORTION 1
-#define RIGHT_LINE_FOLLOW_PROP -0.2
-#define LEFT_LINE_FOLLOW_PROP -0.2
+
+/*** Line Correction Proportions ***/
+#define ERR_4 0.1
+#define ERR_3 0.3
+#define ERR_2 0.5
+#define ERR_1 0.7
 
 #if DEBUG==0
-#define LINE_SENSOR_CHARGE_US 2  //How long we charge the capacitor good at 1
-#define LINE_SENSOR_READ_US 30 //How long we wait between Good at 30
-#define LINE_SENSOR_CONSECUTIVE_READS 10
+#define LINE_SENSOR_CHARGE_US 0  //How long we charge the capacitor good at 1
+#define LINE_SENSOR_READ_US 400 //How long we wait between Good at 30
+#define LINE_SENSOR_CONSECUTIVE_READS 0
+#endif
+#if DEBUG==1
+#define LINE_SENSOR_CHARGE_US 0  //How long we charge the capacitor good at 1
+#define LINE_SENSOR_READ_US 400 //How long we wait between Good at 30
+#define LINE_SENSOR_CONSECUTIVE_READS 0
 #endif
 
 #define DEFSPEED 200

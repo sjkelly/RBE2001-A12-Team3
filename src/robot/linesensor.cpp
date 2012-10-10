@@ -8,7 +8,7 @@ LineSensor::LineSensor(uint16_t _charge, uint16_t _read){
 }
 
 void LineSensor::update(){
-  
+  noInterrupts();
   DDRA = B01111111; //Set to output
   PORTA = B01111111; //write to output
   delayMicroseconds(charge); //Wait for a 
@@ -32,6 +32,7 @@ void LineSensor::update(){
     rearRight = state & B00100000;
     rearLeft = state & B01000000;
   }
+  interrupts();
 }
 
 /*#include "sensor.h"
