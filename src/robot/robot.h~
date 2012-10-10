@@ -1,15 +1,6 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
-#define HEIGHT_DISTANCE 50 //discance to move up and down lines between supply and storage tubes, cm
-#define LENGTH_DISTANCE 10 //distance to move side to side between storage tubes, in cm
-#define REACTOR_PATH 15 //discance to the reactor in cm
-
-#define START_X 3 //starting x coordinate on the field
-#define START_Y 2 //starting y coordinate on the field
-
-#define DEF_SPEED 100 //default speed
-
 #define SERVO_RESPONSE 10 //time servo takes to respon in milliseconds
 #define START_CLAW CLOSED
 /*** Use Options ***/

@@ -44,6 +44,8 @@ class decisionEng
   
   //The actuall function that calculates where to go next
   uint8_t determineDest();
+  
+  friend class btInterface;
 };
 
 #endif
