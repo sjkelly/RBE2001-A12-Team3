@@ -32,7 +32,7 @@ void Motor::drive(int16_t speed)
   digitalWrite(twoA, 0);
   digitalWrite(oneA, 0);
  }
- analogWrite(drivePin, speed);
+ analogWrite(drivePin, speed*proportion);
 }
 
 double Motor::getDistance(void){

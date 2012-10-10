@@ -19,7 +19,7 @@ uint8_t Move::followLine(int16_t speed)
  if(!lineSensor->frontLeft&&!lineSensor->frontCenter&&!lineSensor->frontRight)
  {
   leftMotor->drive(speed);
-  rightMotor->drive(speed*0.9);
+  rightMotor->drive(speed);
  }
  else if(!lineSensor->frontLeft&&!lineSensor->frontCenter&&lineSensor->frontRight){
   leftMotor->drive(speed*0.9);
@@ -27,7 +27,7 @@ uint8_t Move::followLine(int16_t speed)
  }
  else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight){
   leftMotor->drive(speed);
-  rightMotor->drive(speed*0.9);
+  rightMotor->drive(speed);
  }
  else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight){
   leftMotor->drive(speed*0.8);
@@ -43,7 +43,7 @@ uint8_t Move::followLine(int16_t speed)
  }
  else if(lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight&&lineSensor->wingRight&&lineSensor->wingLeft){
   leftMotor->drive(speed);
-  rightMotor->drive(speed*0.9); 
+  rightMotor->drive(speed); 
   if(lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS){
     lineSensor->consecutiveStates = 0;
     return 1;

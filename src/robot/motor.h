@@ -11,7 +11,7 @@ class Motor
   int8_t drivePin, encPin, oneA, twoA;
   float proportion;
  public:
-  Motor(int8_t _encPin, int8_t _drivePin, int8_t _oneA, int8_t _twoA);
+  Motor(int8_t _encPin, int8_t _drivePin, int8_t _oneA, int8_t _twoA, float);
   void drive(int16_t speed);
   double getDistance(void);
   void resetDistance(void);

@@ -16,8 +16,8 @@ void resetField(fieldState *_fieldstate);
 fieldState actualField;
 uint8_t destination;
 LineSensor lineSensor(LINE_SENSOR_CHARGE_US,LINE_SENSOR_READ_US);
-Motor leftMotor(LEFT_ENCODER,LEFT_DRIVE,LEFT_1A,LEFT_2A,RIGHT_PROPORTION);
-Motor rightMotor(RIGHT_ENCODER,RIGHT_DRIVE,RIGHT_1A,RIGHT_2A,LEFT_PROPORTION);
+Motor leftMotor(LEFT_ENCODER,LEFT_DRIVE,LEFT_1A,LEFT_2A,LEFT_PROPORTION);
+Motor rightMotor(RIGHT_ENCODER,RIGHT_DRIVE,RIGHT_1A,RIGHT_2A,RIGHT_PROPORTION);
 Move move(BUMPER_PIN, &lineSensor, &leftMotor, &rightMotor);
 Servo clawServo, wristServo, liftServo;
 Actuation mainActuation(&clawServo, &wristServo, &liftServo, TOP_BUMPER, BOT_BUMPER);
@@ -63,7 +63,9 @@ void loop(){
   }
   if(DEBUG) debug(&lineSensor, &leftMotor, &rightMotor, &move);
   
-  
+  rightMotor.drive(DEFSPEED);
+  leftMotor.drive(DEFSPEED);
+  /*
   //startup sequence to get us to the reactor at the start
   if(startUp){
     switch(startSequence)
@@ -127,7 +129,7 @@ void loop(){
      break;
    }
   }   
-  
+  */
 }
 //A helper that resets the field state
 void resetField(fieldState *_fieldstate)
