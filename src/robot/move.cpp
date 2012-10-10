@@ -5,7 +5,7 @@ Move::Move(uint8_t _bumperPin, LineSensor* _lineSensor, Motor* _leftMotor, Motor
   pinMode(_bumperPin, INPUT);
   digitalWrite(_bumperPin, HIGH);       // turn on pullup resistors for our switch
   bumperPin = _bumperPin;
-  currentPosition = SPENT_2;
+ // currentPosition = SPENT_2;
   lineSensor = _lineSensor;
   leftMotor = _leftMotor;
   rightMotor = _rightMotor;
@@ -14,55 +14,52 @@ Move::Move(uint8_t _bumperPin, LineSensor* _lineSensor, Motor* _leftMotor, Motor
   moving = 0;
   position.x = START_X; //set the former destination to the starting place on the field.
   position.y = START_Y;
-  heading = EAST; 
+  heading = WEST; 
 }
 
 uint8_t Move::followLine(int16_t speed)
 {
- if(!lineSensor->frontLeft&&!lineSensor->frontCenter&&!lineSensor->frontRight)
- {
-  leftMotor->drive(speed);
-  rightMotor->drive(speed);
- }
- else if(!lineSensor->frontLeft&&!lineSensor->frontCenter&&lineSensor->frontRight){
-  leftMotor->drive(speed*0.9);
-  rightMotor->drive(speed*0.5);
- }
- else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight){
-  leftMotor->drive(speed);
-  rightMotor->drive(speed);
- }
- else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight){
-  leftMotor->drive(speed*0.8);
-  rightMotor->drive(speed*0.6);
- }
- else if(lineSensor->frontLeft&&!lineSensor->frontCenter&&!lineSensor->frontRight){
-  leftMotor->drive(speed*0.5);
-  rightMotor->drive(speed*0.9);
- }
- else if(lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight){
-  leftMotor->drive(speed*0.6);
-  rightMotor->drive(speed*0.8);
- }
- else if(lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight&&lineSensor->wingRight&&lineSensor->wingLeft){
-  leftMotor->drive(speed);
-  rightMotor->drive(speed); 
-  if(lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS){
-    lineSensor->consecutiveStates = 0;
-    return 1;
+  if(!lineSensor->frontLeft&&!lineSensor->frontCenter&&!lineSensor->frontRight) //on white, keep going
+  {
+    leftMotor->drive(speed);
+    rightMotor->drive(speed);
   }
- else if(lineSensor->frontLeft){
-  leftMotor->drive(0);
-  rightMotor->drive(speed);   
-   
- }
- else if(lineSensor->frontRight){
-  leftMotor->drive(speed);
-  rightMotor->drive(0);   
-   
- }
- }
- return 0;
+  else if(!lineSensor->frontLeft&&!lineSensor->frontCenter&&lineSensor->frontRight) //line is on right side, turn hard right
+  {
+    leftMotor->drive(speed);
+    rightMotor->drive(speed*0.5);
+  }
+  else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight) // on the line, go straight
+  {
+    leftMotor->drive(speed);
+    rightMotor->drive(speed);
+  }
+  else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight) // line is right-ish, ease right
+  {
+    leftMotor->drive(speed*0.9);
+    rightMotor->drive(speed*0.7);
+  }
+  else if(lineSensor->frontLeft&&!lineSensor->frontCenter&&!lineSensor->frontRight) // line is left, turn hard left
+  {
+    leftMotor->drive(speed*0.5);
+    rightMotor->drive(speed);
+  }
+  else if(lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight) // line is left-ish, ease left
+  {
+    leftMotor->drive(speed*0.7);
+    rightMotor->drive(speed*0.9);
+  }
+  else if(lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight&&lineSensor->wingRight&&lineSensor->wingLeft) //at intersection, return 1!
+  {
+    leftMotor->drive(speed);
+    rightMotor->drive(speed); 
+    if(lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS) //noise filter
+    {
+      lineSensor->consecutiveStates = 0;
+      return 1;
+    }
+  }
+  return 0;
 }
 
 uint8_t Move::checkBumper(void){
