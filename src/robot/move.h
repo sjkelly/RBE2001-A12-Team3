@@ -7,13 +7,6 @@
 
 
 enum moveToType {DRIVING, TURNING};
-enum direction {NORTH = 0, SOUTH = 2, EAST = 1, WEST = 3};
-struct coord
-{
-	int8_t x,y;
-};
-
-
 
 class Move
 {
@@ -29,14 +22,11 @@ class Move
    * A and B are reactor tubes. 1-4 is spent rods
    * 4-5 are New rods. 
    */
-  uint8_t matchDirection(direction _heading);
   uint8_t to(uint8_t, int16_t); 
   private:
   LineSensor* lineSensor;
   Motor* leftMotor; 
   Motor* rightMotor;
-  coord position;
-  direction heading;
   uint8_t bumperPin;
   uint8_t turning, drivingForward, moving; //state transition and terminators. 
   int16_t turnTarget;
