@@ -10,6 +10,8 @@ Move::Move(uint8_t _bumperPin, LineSensor* _lineSensor, Motor* _leftMotor, Motor
   lineSensor = _lineSensor;
   leftMotor = _leftMotor;
   rightMotor = _rightMotor;
+  position.x = START_X; //set the former destination to the starting place on the field.
+  position.y = START_Y; 
 }
 
 uint8_t Move::followLine(int16_t speed)
@@ -127,8 +129,101 @@ uint8_t Move::forward(double target, int16_t speed, uint8_t allowedCrosses){
   }
   return 0;
 }
+uint8_t Move::matchDirection(direction _heading)
+{
+ int16_t angle = ((90*(heading - _heading))%180);
+ return turn(angle, DEF_SPEED);
+}
 
-uint8_t Move::to(uint8_t target, int16_t speed){
+uint8_t Move::to(uint8_t target, int16_t speed)
+{
+ coord destcoord;
+ switch (target)
+ {
+  case REACTOR_A:
+   destcoord.x = 1;
+   destcoord.y = 2;
+   break;
+  case REACTOR_B:
+   destcoord.x = 6;
+   destcoord.y = 2;
+   break;
+  case SPENT_1:
+   destcoord.x = 2;
+   destcoord.y = 1;
+   break;
+  case SPENT_2:
+   destcoord.x = 3;
+   destcoord.y = 1;
+   break;
+  case SPENT_3:
+   destcoord.x = 4;
+   destcoord.y = 1;
+   break;
+  case SPENT_4:
+   destcoord.x = 5;
+   destcoord.y = 1;
+   break;
+  case NEW_1:
+   destcoord.x = 2;
+   destcoord.y = 3;
+   break;
+  case NEW_2:
+   destcoord.x = 3;
+   destcoord.y = 3;
+   break;
+  case NEW_3:
+   destcoord.x = 4;
+   destcoord.y = 3;
+   break;
+  case NEW_4:
+   destcoord.x = 5;
+   destcoord.y = 3;
+ }
+ coord relative;
+ relative.x = destcoord.x = position.x;
+ relative.y = destcoord.y = position.y;
+ if(relative.x == 0 && relative.y == 0)
+ { 
+  position.x = destcoord.x;	 
+  position.y = destcoord.y;
+  return 1;
+ }
+ //this is where it checks the relative position in order to figure out what it has to do. It is a little redundant becuase it has to onnly move horizontally if
+ //it is in the middle column
+ switch (relative.y)
+ {
+  case 2:
+  case -2:
+   if(matchDirection((relative.y > 0)?NORTH:SOUTH))
+   {
+    if(forward(HEIGHT_DISTANCE, DEF_SPEED, 1))
+    {
+     position.y += (relative.y > 0)?-1:1;
+    }
+   } 
+   break;
+  case 1:
+  case -1:
+  case 0:
+   if(matchDirection((relative.x > 0)?EAST:WEST))
+   {
+    if(forward(HEIGHT_DISTANCE, DEF_SPEED, 1))
+    {
+     position.x += (relative.x > 0)?-1:1;
+    }
+   }
+   if(matchDirection((relative.y > 0)?NORTH:SOUTH))
+   {
+    if(forward(HEIGHT_DISTANCE, DEF_SPEED, 1))
+    {
+     position.y += (relative.y > 0)?-1:1;
+    }
+   }
+  }
+ return 0;
+}
+/*{
   if(!moving){
     if(target == currentPosition) return 1; //at the position already. we are done
     executedMoves = 0;
@@ -221,4 +316,4 @@ uint8_t Move::to(uint8_t target, int16_t speed){
    return 1;
   }
   return 0;
-}
+}*///this is the defunct move to
