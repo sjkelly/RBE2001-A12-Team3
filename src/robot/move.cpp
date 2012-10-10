@@ -198,7 +198,8 @@ uint8_t Move::to(uint8_t target, int16_t speed)
  relative.x = destcoord.x = position.x;
  relative.y = destcoord.y = position.y;
  if(relative.x == 0 && relative.y == 0) //if we are where we need to go, set the positon to our destinaton, and return a sucessful move
- { 
+ {
+  Serial.print("MADE IT!!!!"); 
   position.x = destcoord.x;	 
   position.y = destcoord.y;
   return 1;
