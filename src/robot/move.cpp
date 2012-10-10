@@ -212,8 +212,8 @@ uint8_t Move::to(uint8_t target, int16_t speed)
  {
   case 4:
   case -4:
-   //backout and turn around
-   //increment possition
+   if(forward(25, -DEFSPEED, 3)
+    position.y += (relative.y > 0)?-1:1; //also think about setting direction here
    break;
   case 3:
   case -3:
@@ -227,22 +227,22 @@ uint8_t Move::to(uint8_t target, int16_t speed)
   case 0: //this means it is going to a reactor tube
    if(abs(relative.x) == 1)
    {
-     //go forward untill bumper
-     //increment position
+     if(forward(100, DEFSPEED, 3))
+      position.y += (relative.y > 0)?-1:1; //also think about setting direction here
    }
   case 2:
   case -2:
    if(position.x == 1 || position.x == 8)
    {
-     //backout and turn around
-     //increment position
+     if(forward(25, -DEFSPEED, 3)
+       position.x += (relative.x > 0)?-1:1; //also think about setting direction here
      
    }
    else if(relative.x !=0)
    { 
     if(matchDirection((relative.x > 0)?EAST:WEST))
     {  
-      if(forward(HEIGHT_DISTANCE, DEFSPEED, relative.x ))
+      if(forward(500, DEFSPEED, relative.x ))
       {
        position.x = (relative.y != 0)?0:(relative.x > 0)?1:-1;
       }
@@ -262,8 +262,8 @@ uint8_t Move::to(uint8_t target, int16_t speed)
    break;
   case 1:
   case -1:
-   //go forward until bumper triggers
-   //increment position
+    if(forward(100, DEFSPEED, 3))
+      position.y += (relative.y > 0)?-1:1; //also think about setting direction here
    break;
   }
  return 0;
