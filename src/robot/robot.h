@@ -1,8 +1,17 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
+#define HEIGHT_DISTANCE 50 //discance to move up and down lines between supply and storage tubes, cm
+#define LENGTH_DISTANCE 10 //distance to move side to side between storage tubes, in cm
+#define REACTOR_PATH 15 //discance to the reactor in cm
+
+#define START_X 3 //starting x coordinate on the field
+#define START_Y 2 //starting y coordinate on the field
 
 
+
+#define SERVO_RESPONSE 10 //time servo takes to respon in milliseconds
+#define START_CLAW CLOSED
 /*** Use Options ***/
 #define DEBUG 0
 
@@ -13,7 +22,10 @@
 
 #define TOP_BUMPER 1
 #define BOT_BUMPER 0
-#define BUMPER_PIN 23
+
+#define TOP_BUMPERPHYS 3
+#define BOT_BUMPERPHYS 2
+#define BUMPER_PIN 32
 
 #define LEFT_1A 33
 #define LEFT_2A 34
@@ -37,7 +49,7 @@
 #define WHEEL_SPACING_CM 24.1
 
 /*** Tuning Defines ***/
-#define RIGHT_PROPORTION .95
+#define RIGHT_PROPORTION 0.95
 #define LEFT_PROPORTION 1
 #define RIGHT_LINE_FOLLOW_PROP -0.2
 #define LEFT_LINE_FOLLOW_PROP -0.2

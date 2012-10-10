@@ -38,9 +38,11 @@ void btInterface::btHandle()
  {
   checksum += btMessage[size+2];
  }
+  checksum = 0xFF - (checksum%0xFF);
+  
  if(size != btMessage[2]){}
   //debug wrong size, possibly incomplete transmission
- if(btMessage[size+2] != (checksum < 0xff)?checksum:0xff){}
+ if(btMessage[size+2] != checksum){}
   //debug worng checksum, possibly misread transimission
  switch(btMessage[2])
  {
@@ -97,7 +99,7 @@ void btInterface::btSend(btType type, uint8_t *data, uint8_t destination = 0x00)
  //size byte
  mBuffer[1] = size + 3;
  //checksum
- mBuffer[size + 5] = (checksum < 0xFF)?checksum:0xFF;
+ mBuffer[size + 5] = 0xFF - (checksum%0xFF);
  mBuffer[size + 6] = 0x0;
  for(iterator = &mBuffer[0]; *iterator != TERMINATOR; iterator++)
  {
@@ -110,10 +112,24 @@ void btInterface::sendHeartbeat()
   //uint8_t data = 0x00;
   //btSend(HEARTBEAT, &data);
   
-  uint8_t pkt[7] = {0x5F, 0x06, 0x07, 0x01, 0x00, 0x00, 0xF1};
+  uint8_t pkt[7] = {0x5F, 0x06, 0x07, btID, 0x00, 0x00, 0xFF-(0x0D+btID)};
   Serial3.write(pkt,7);
   
   //*/
 } 
+
+void btInterface::sendNewRadiation()
+{
+  uint8_t pkt[7] = {0x5F, 0x06, 0x03, btID, 0x00, 0xFF, 0xFF - (0x09+btID)};
+  Serial3.write(pkt,7);
+}
+
+void btInterface::sendSpentRadiation()
+{
+  uint8_t pkt[7] = {0x5F, 0x06, 0x03, btID, 0x00, 0x2C, 0xFF - (0x35+btID)};
+  Serial3.write(pkt,7);
+}
+
+
 
 

@@ -1,3 +1,4 @@
+#include "Arduino.h"
 #include "actuation.h"
 
 
@@ -8,13 +9,17 @@ Actuation::Actuation(Servo* _clawServo, Servo* _wristServo, Servo* _liftServo, u
  liftServo = _liftServo;
  topPin   = _topPin;
  botPin  = _botPin;
+ currentClaw = START_CLAW;
+ desiredClaw = START_CLAW;
+ //currentLiftState = MID;
 }
 
-bool Actuation::moveUp()
+uint8_t Actuation::moveUp()
 {
  if(currentLiftState != UP)
  {
   liftServo->write( GOUP);
+  wristServo->write(FACEDOWN);
   return 0;
  }
  else
@@ -25,11 +30,11 @@ bool Actuation::moveUp()
  }
 }
 //this needs to be different because it is should already start rotating down, we will have to call this in the middle of a move 
-bool Actuation::moveDown()
+uint8_t Actuation::moveDown()
 {
  if(currentLiftState != DOWN)
  {
-  liftServo->write( GODOWN);
+  liftServo->write(GODOWN);
   wristServo->write(FACEDOWN);
   return 0;
  }
@@ -48,12 +53,30 @@ void Actuation::upReach()
 {
  currentLiftState = UP;
 }
+/*
+void Actuation::midReach()
+{
+ currentLiftState = MID;
+}*/
 
 void Actuation::closeClaw()
 {
- clawServo->write( CLOSE);
+ desiredClaw = CLOSED;
 }
 void Actuation::openClaw()
 {
- clawServo->write( OPEN);
+ desiredClaw = OPENED;
+}
+
+void Actuation::updateClaw()
+{
+  if(desiredClaw != currentClaw)
+  {
+   if(desiredClaw == CLOSED)
+    clawServo->write( CLOSE);
+   else
+    clawServo->write( OPEN);
+   delay(SERVO_RESPONSE);
+   currentClaw = desiredClaw;
+  }
 }

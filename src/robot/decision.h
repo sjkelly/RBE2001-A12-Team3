@@ -29,14 +29,20 @@ struct fieldState
  tubeState clawContents, reactorA, reactorB;
 };
 
+
+//This classes job is to decided where we go to next
 class decisionEng
 {
  private:
+  //This is a pointer to a virtual representation of the field
   fieldState *state;
  public:
   decisionEng(fieldState *_state);
+  //these two functions are called in order to allow the bluetooth class to provide the locations of open rod receptacles and new rods
   void supplyMessage(uint8_t _mask);
   void spentMessage(uint8_t _mask);
+  
+  //The actuall function that calculates where to go next
   uint8_t determineDest();
   
   friend class btInterface;

@@ -1,7 +1,7 @@
 #ifndef ___BLUETOOTH___
 #define ___BLUETOOTH___
 #define MAX_MESSAGE_SIZE 300
-#define ID 0x03
+#define ID 0x01
 #include <stdint.h>
 #include "Arduino.h"
 #include "robot.h"
@@ -76,6 +76,8 @@ class btInterface
   
   void sendHeartbeat();
    //buffers for the supply and new storage tube data
+   void sendNewRadiation();
+   void sendSpentRadiation();
    
   friend class decisionEng;
 };
