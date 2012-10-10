@@ -16,11 +16,10 @@ Move::Move(uint8_t _bumperPin, LineSensor* _lineSensor, Motor* _leftMotor, Motor
 
 uint8_t Move::followLine(int16_t speed)
 {
- lineSensor->update();
  if(!lineSensor->frontLeft&&!lineSensor->frontCenter&&!lineSensor->frontRight)
  {
   leftMotor->drive(speed);
-  rightMotor->drive(speed);
+  rightMotor->drive(speed*0.9);
  }
  else if(!lineSensor->frontLeft&&!lineSensor->frontCenter&&lineSensor->frontRight){
   leftMotor->drive(speed*0.9);
@@ -28,7 +27,7 @@ uint8_t Move::followLine(int16_t speed)
  }
  else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight){
   leftMotor->drive(speed);
-  rightMotor->drive(speed);
+  rightMotor->drive(speed*0.9);
  }
  else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight){
   leftMotor->drive(speed*0.8);
@@ -44,7 +43,7 @@ uint8_t Move::followLine(int16_t speed)
  }
  else if(lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight&&lineSensor->wingRight&&lineSensor->wingLeft){
   leftMotor->drive(speed);
-  rightMotor->drive(speed); 
+  rightMotor->drive(speed*0.9); 
   if(lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS){
     lineSensor->consecutiveStates = 0;
     return 1;
@@ -58,6 +57,7 @@ uint8_t Move::checkBumper(void){
 }
 
 uint8_t Move::turn(int16_t angle, int16_t speed){
+ //lineSensor->update();
  if(!turning){
    leftMotor->resetDistance(); 
    rightMotor->resetDistance();
@@ -67,21 +67,21 @@ uint8_t Move::turn(int16_t angle, int16_t speed){
  if(turning && leftMotor->getDistance()<=turnTarget && rightMotor->getDistance()<=turnTarget){
    if(angle > 0){
      leftMotor->drive(speed*-1);
-     rightMotor->drive(speed);
+     rightMotor->drive(speed*0.9);
    }
    else if(angle < 0){
      leftMotor->drive(speed);
-     rightMotor->drive(speed*-1);
+     rightMotor->drive(speed*-0.9);
    }
-   /*if (angle%90 == 0 && lineSensor->rearRight && lineSensor->rearLeft && lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS && 
-       leftMotor->getDistance() > 3 && rightMotor->getDistance() > 3){
+   if (angle%90 == 0 && lineSensor->rearRight && lineSensor->rearLeft && lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS && 
+       leftMotor->getDistance() >= turnTarget - 2 && rightMotor->getDistance() > turnTarget - 2){
      rightMotor->drive(0);  
      leftMotor->drive(0); 
      if(DEBUG)Serial.println("Turn finished!");
      turning = 0;
      turnTarget = 0;
      return 1;
-   }*/
+   }
    return 0;
  }
  else {

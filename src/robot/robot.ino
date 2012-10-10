@@ -50,6 +50,7 @@ void setup(){
 
 void loop(){
   mainActuation.moveUp();
+  lineSensor.update();
   if(mainBluetooth.btRecieve())
   {
     mainBluetooth.btHandle();
@@ -80,7 +81,7 @@ void loop(){
       startSequence += move.turn(90,DEFSPEED); 
       break;
     case 4:
-      startSequence += move.forward(50,DEFSPEED, 0);
+      startSequence += move.forward(70,DEFSPEED, 1);
       break;
     case 5: 
       startUp = 0;

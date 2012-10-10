@@ -13,6 +13,7 @@
 #define CLOSE 250
 
 enum actLiftState {UP=1, DOWN=0};
+
 class Actuation
 {
  private:
