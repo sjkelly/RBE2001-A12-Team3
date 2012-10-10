@@ -13,7 +13,8 @@ Move::Move(uint8_t _bumperPin, LineSensor* _lineSensor, Motor* _leftMotor, Motor
   drivingForward = 0; 
   moving = 0;
   position.x = START_X; //set the former destination to the starting place on the field.
-  position.y = START_Y; 
+  position.y = START_Y;
+  heading = EAST; 
 }
 
 uint8_t Move::followLine(int16_t speed)
