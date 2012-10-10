@@ -26,6 +26,7 @@ int i = 0, startUp = 1, startSequence = 0;
 decisionEng theDecider(&actualField);
 btInterface mainBluetooth(&theDecider);
 volatile bool beatFlag = 0;
+uint8_t gotClaw = 0;
 
 void setup(){
   
@@ -119,66 +120,38 @@ void loop(){
       break; 
     }
   }
-  else if(!startUp && move.to(destination, DEFSPEED)) //check if an action has completed
+  else if(!startUp)
   {
-   switch(destination) //what we should do is determined by where we have just arrived
-   {
-    case REACTOR_A: //if we are at a reactor
-    case REACTOR_B:
-     if((destination == REACTOR_A)?actualField.reactorA:actualField.reactorB == SPENT_ROD) //if there is a spent rod in the reactor tube
-     {
-      if(mainActuation.moveDown())//on successful move, move down in order to get rod
-      {
-       mainActuation.closeClaw();//close claw, grab rod
-       actualField.clawContents = SPENT_ROD; //robot is holding a spent rod
-       (destination == REACTOR_A)?actualField.reactorA:actualField.reactorB = NO_ROD; //no more rod in the reactor
-       destination = theDecider.determineDest(); //go to a new place
-      }
-      else //if still moving down, make sure that the claw is open to grab rod
-      {
-        mainActuation.openClaw();
-      }
-     }
-     else //if there is no rod in there
-     {
-      if(mainActuation.moveDown())//move down to insert the rod in
-      {
-        mainActuation.openClaw(); //open the claw, drop rod in
-       actualField.clawContents = NO_ROD; //we are no longer holding a rod
-       (destination == REACTOR_A)?actualField.reactorA:actualField.reactorB = NEW_ROD; //there is now a new rod in the reactor
-       destination = theDecider.determineDest(); //go to a new place
-
-      }
-     }
-     break;
-    case SPENT_1:   //if we are at a storage tube
-    case SPENT_2:
-    case SPENT_3:
-    case SPENT_4:
-     mainActuation.openClaw();//open the claw to drop spent rod in   
-     actualField.clawContents = NO_ROD; //we are no longer holding a rod
-     destination = theDecider.determineDest(); //go somewhere else
-     break;
-    case NEW_1: //if we are at a supply tube
-    case NEW_2:
-    case NEW_3:
-    case NEW_4:
-     mainActuation.closeClaw(); //close claw to grab new rod
-     actualField.clawContents = NEW_ROD; //we are now holding a new rod
-     destination = theDecider.determineDest(); // go somewhere else
-     
-   }
-  }
-  else //if we are currently in the middle of moving somewhere
-  {
-    if(actualField.clawContents == NO_ROD) //if we are not holding a rod, the claw should be open
+    if(0 == gotClaw)
+    {
      mainActuation.openClaw();
+     if(mainActuation.moveDown())
+      gotClaw++;
+    }
+    else if(gotClaw == 1)
+    {
+     
+     mainActuation.closeClaw();
+     actualField.clawContents = SPENT_ROD;
+     if(mainActuation.moveUp())
+      gotClaw++;
+    }
+    else if(2 == gotClaw)
+    {
+      if(move.forward(25, -DEFSPEED, 3))
+       gotClaw++;
+    }
+    else if(3 == gotClaw)
+    {
+      if(move.turn(180, DEFSPEED))
+       gotClaw++;
+    }
     else
     {
-     mainActuation.closeClaw(); //if we are holding a rod, the claw should be closed so we don't drop it
-     
-     mainActuation.moveUp(); //no matter where we are going, our claw should be up
+      move.forward(0, 0, 0);
     }
+    
+  
   }
   mainActuation.updateClaw();
 }
