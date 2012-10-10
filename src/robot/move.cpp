@@ -48,6 +48,16 @@ uint8_t Move::followLine(int16_t speed)
     lineSensor->consecutiveStates = 0;
     return 1;
   }
+ else if(lineSensor->frontLeft){
+  leftMotor->drive(0);
+  rightMotor->drive(speed);   
+   
+ }
+ else if(lineSensor->frontRight){
+  leftMotor->drive(speed);
+  rightMotor->drive(0);   
+   
+ }
  }
  return 0;
 }

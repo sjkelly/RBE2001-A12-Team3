@@ -37,6 +37,8 @@
 #define WHEEL_SPACING_CM 24.1
 
 /*** Tuning Defines ***/
+#define RIGHT_PROPORTION 1
+#define LEFT_PROPORTION 1
 #define RIGHT_LINE_FOLLOW_PROP -0.2
 #define LEFT_LINE_FOLLOW_PROP -0.2
 
