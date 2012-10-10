@@ -2,9 +2,6 @@
 #include "robot.h"
 #include "Arduino.h"
 
-LineSensor::LineSensor(){
-}
-
 LineSensor::LineSensor(uint16_t _charge, uint16_t _read){ 
   charge = _charge;
   read = _read;

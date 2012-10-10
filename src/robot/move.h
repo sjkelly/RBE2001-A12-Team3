@@ -43,7 +43,6 @@ class Move
   
   volatile uint8_t crossedLines;
   double avgDistance, startDistance, forwardLength;
-  uint8_t atIntersection;
   uint8_t currentPosition;  //Same as input to 'move.to'
   uint8_t acceptingCrosses;
   
