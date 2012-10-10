@@ -133,7 +133,7 @@ uint8_t Move::forward(double target, int16_t speed, uint8_t allowedCrosses){
       return 1;
     }
   }
-  if(!drivingForward || avgDistance>=target || checkBumper()) {
+  if(!drivingForward || avgDistance>=target || (checkBumper() && avgDistance>=3)) {
     leftMotor->drive(0);
     rightMotor->drive(0);
     if(DEBUG)Serial.println("Forward move finished!");
