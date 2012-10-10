@@ -145,39 +145,39 @@ uint8_t Move::to(uint8_t target, int16_t speed)
    destcoord.y = 3;
    break;
   case REACTOR_B:
-   destcoord.x = 6;
+   destcoord.x = 8;
    destcoord.y = 3;
    break;
   case SPENT_1:
-   destcoord.x = 2;
+   destcoord.x = 3;
    destcoord.y = 1;
    break;
   case SPENT_2:
-   destcoord.x = 3;
+   destcoord.x = 4;
    destcoord.y = 1;
    break;
   case SPENT_3:
-   destcoord.x = 4;
+   destcoord.x = 5;
    destcoord.y = 1;
    break;
   case SPENT_4:
-   destcoord.x = 5;
+   destcoord.x = 6;
    destcoord.y = 5;
    break;
   case NEW_1:
-   destcoord.x = 2;
-   destcoord.y = 5;
-   break;
-  case NEW_2:
    destcoord.x = 3;
    destcoord.y = 5;
    break;
-  case NEW_3:
+  case NEW_2:
    destcoord.x = 4;
    destcoord.y = 5;
    break;
-  case NEW_4:
+  case NEW_3:
    destcoord.x = 5;
+   destcoord.y = 5;
+   break;
+  case NEW_4:
+   destcoord.x = 6;
    destcoord.y = 5;
  }
  coord relative;
@@ -202,27 +202,44 @@ uint8_t Move::to(uint8_t target, int16_t speed)
   case -3:
    if(matchDirection((relative.y > 0)?NORTH:SOUTH))
    {
-     if(forward(HEIGHT_DISTANCE, DEFSPEED, relative.x))
-     {
-      position.x += (relative.x > 0)?1:-1;
-     }
-   } 
-   break;
-  case 2:
-  case -2:
-  case 0:
-   if(matchDirection((relative.x > 0)?EAST:WEST))
-   {
-    if(forward(HEIGHT_DISTANCE, DEFSPEED, 1))
-    {
-     position.x += (relative.x > 0)?-1:1;
-    }
-   }
-   if(matchDirection((relative.y > 0)?NORTH:SOUTH))
-   {
     if(forward(HEIGHT_DISTANCE, DEFSPEED, 1))
     {
      position.y += (relative.y > 0)?-1:1;
+    }
+   } 
+  case 0: //this means it is going to a reactor tube
+   if(abs(relative.x) == 1)
+   {
+     //go forward untill bumper
+     //increment position
+   }
+  case 2:
+  case -2:
+   if(position.x == 1 || position.x == 8)
+   {
+     //backout and turn around
+     //increment position
+     
+   }
+   else if(relative.x !=0)
+   { 
+    if(matchDirection((relative.x > 0)?EAST:WEST))
+    {  
+      if(forward(HEIGHT_DISTANCE, DEFSPEED, relative.x ))
+      {
+       position.x = (relative.y != 0)?0:(relative.x > 0)?1:-1;
+      }
+   
+    }
+   }
+   else if(relative.y != 0); 
+   {
+    if(matchDirection((relative.y > 0)?NORTH:SOUTH))
+    {
+     if(forward(HEIGHT_DISTANCE, DEFSPEED, 1))
+     {
+      position.y += (relative.y > 0)?-1:1;
+     }
     }
    }
    break;
