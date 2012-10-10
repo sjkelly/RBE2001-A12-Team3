@@ -61,7 +61,6 @@ void setup(){
 
 
 void loop(){
-  mainActuation.moveUp();
   lineSensor.update();
   if(mainBluetooth.btRecieve())
   {
@@ -96,6 +95,8 @@ void loop(){
 
   //startup sequence to get us to the reactor at the start
   if(startUp){
+    mainActuation.moveUp();
+    mainActuation.openClaw();
     switch(startSequence)
     {
     case 0:
@@ -111,7 +112,7 @@ void loop(){
       startSequence += move.turn(90,DEFSPEED); 
       break;
     case 4:
-      startSequence += move.forward(FIELD_Y/2,DEFSPEED, 1);
+      startSequence += move.forward(FIELD_Y/2,DEFSPEED, 3);
       break;
     case 5: 
       startUp = 0;

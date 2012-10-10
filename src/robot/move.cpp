@@ -14,7 +14,7 @@ Move::Move(uint8_t _bumperPin, LineSensor* _lineSensor, Motor* _leftMotor, Motor
   moving = 0;
   position.x = START_X; //set the former destination to the starting place on the field.
   position.y = START_Y;
-  heading = EAST; 
+  heading = WEST; 
 }
 
 uint8_t Move::followLine(int16_t speed)
@@ -25,7 +25,7 @@ uint8_t Move::followLine(int16_t speed)
   rightMotor->drive(speed);
  }
  else if(!lineSensor->frontLeft&&!lineSensor->frontCenter&&lineSensor->frontRight){
-  leftMotor->drive(speed*0.9);
+  leftMotor->drive(speed);
   rightMotor->drive(speed*0.5);
  }
  else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight){
@@ -33,16 +33,16 @@ uint8_t Move::followLine(int16_t speed)
   rightMotor->drive(speed);
  }
  else if(!lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight){
-  leftMotor->drive(speed*0.8);
-  rightMotor->drive(speed*0.6);
+  leftMotor->drive(speed*0.9);
+  rightMotor->drive(speed*0.7);
  }
  else if(lineSensor->frontLeft&&!lineSensor->frontCenter&&!lineSensor->frontRight){
   leftMotor->drive(speed*0.5);
-  rightMotor->drive(speed*0.9);
+  rightMotor->drive(speed);
  }
  else if(lineSensor->frontLeft&&lineSensor->frontCenter&&!lineSensor->frontRight){
-  leftMotor->drive(speed*0.6);
-  rightMotor->drive(speed*0.8);
+  leftMotor->drive(speed*0.7);
+  rightMotor->drive(speed*0.9);
  }
  else if(lineSensor->frontLeft&&lineSensor->frontCenter&&lineSensor->frontRight&&lineSensor->wingRight&&lineSensor->wingLeft){
   leftMotor->drive(speed);
@@ -234,6 +234,7 @@ uint8_t Move::to(uint8_t target, int16_t speed)
   case -2:
    if(position.x == 1 || position.x == 8)
    {
+     forward(50, 0, 1);
      //backout and turn around
      //increment position
      
