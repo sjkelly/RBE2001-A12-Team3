@@ -63,7 +63,7 @@ uint8_t Move::followLine(int16_t speed)
 }
 
 uint8_t Move::checkBumper(void){
-  return !digitalRead(bumperPin);
+  return !digitalRead(bumperPin); //since we have pullups, this will be inverting
 }
 
 uint8_t Move::turn(int16_t angle, int16_t speed){
