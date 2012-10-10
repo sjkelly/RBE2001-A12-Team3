@@ -60,7 +60,7 @@
 #define LINE_SENSOR_CONSECUTIVE_READS 10
 #endif
 
-#define DEFSPEED 200
+#define DEFSPEED 110
 
 
 /*** Field Lengths ***/
