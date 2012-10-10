@@ -212,7 +212,7 @@ uint8_t Move::to(uint8_t target, int16_t speed)
  {
   case 4:
   case -4:
-   if(forward(25, -DEFSPEED, 3)
+   if(forward(25, -DEFSPEED, 3))
     position.y += (relative.y > 0)?-1:1; //also think about setting direction here
    break;
   case 3:
@@ -234,7 +234,7 @@ uint8_t Move::to(uint8_t target, int16_t speed)
   case -2:
    if(position.x == 1 || position.x == 8)
    {
-     if(forward(25, -DEFSPEED, 3)
+     if(forward(25, -DEFSPEED, 3))
        position.x += (relative.x > 0)?-1:1; //also think about setting direction here
      
    }

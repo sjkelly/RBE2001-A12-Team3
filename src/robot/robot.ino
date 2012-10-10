@@ -14,7 +14,7 @@ void resetField(fieldState *_fieldstate);
 
 //Object Constructors
 fieldState actualField;
-uint8_t destination = REACTOR_;
+uint8_t destination = REACTOR_A;
 uint8_t blinkflag;
 LineSensor lineSensor(LINE_SENSOR_CHARGE_US,LINE_SENSOR_READ_US);
 Motor leftMotor(LEFT_ENCODER,LEFT_DRIVE,LEFT_1A,LEFT_2A,LEFT_PROPORTION);
@@ -126,7 +126,7 @@ void loop(){
     case REACTOR_B:
      if((destination == REACTOR_A)?actualField.reactorA:actualField.reactorB == SPENT_ROD) //if there is a spent rod in the reactor tube
      {
-      if(mainActuation.moveDown))//on successful move, move down in order to get rod
+      if(mainActuation.moveDown())//on successful move, move down in order to get rod
       {
        mainActuation.closeClaw();//close claw, grab rod
        actualField.clawContents = SPENT_ROD; //robot is holding a spent rod
