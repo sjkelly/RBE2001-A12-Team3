@@ -15,6 +15,7 @@ void resetField(fieldState *_fieldstate);
 //Object Constructors
 fieldState actualField;
 uint8_t destination;
+uint8_t blinkflag;
 LineSensor lineSensor(LINE_SENSOR_CHARGE_US,LINE_SENSOR_READ_US);
 Motor leftMotor(LEFT_ENCODER,LEFT_DRIVE,LEFT_1A,LEFT_2A);
 Motor rightMotor(RIGHT_ENCODER,RIGHT_DRIVE,RIGHT_1A,RIGHT_2A);
@@ -30,14 +31,25 @@ void setup(){
   
   Serial.begin(9600);
   MsTimer2::set(1000, heartBeat);
+  //limit switches111
   pinMode(2, INPUT);
   pinMode(3, INPUT);
   digitalWrite(2, HIGH);
   digitalWrite(3, HIGH);
+  //blink LEDs
+  pinMode(30, OUTPUT);
+  pinMode(33, OUTPUT);
+  digitalWrite(30, LOW);
+  digitalWrite(33, LOW);
+  //Attaching all of our interrupts
   attachInterrupt(leftMotor.interruptPin,leftEncoderISR,CHANGE);
   attachInterrupt(rightMotor.interruptPin,rightEncoderISR,CHANGE);
   attachInterrupt(TOP_BUMPER, _reachUp, FALLING);
   attachInterrupt(BOT_BUMPER, _reachDown, FALLING);
+  /*
+  attachInterrupt(TOP_BUMPER, _reachMid, RISING);
+  attachInterrupt(BOT_BUMPER, _reachMid, RISING);
+  */
   clawServo.attach(CLAW_SERVO);
   wristServo.attach(WRIST_SERVO);
   liftServo.attach(LIFT_SERVO);
@@ -57,11 +69,35 @@ void loop(){
   }
   if(beatFlag)
   {
+    blinkflag = !blinkflag;
     mainBluetooth.sendHeartbeat();
+    if(actualField.clawContents == NEW_ROD)
+    {
+     mainBluetooth.sendNewRadiation();
+     digitalWrite(30, blinkflag);
+     digitalWrite(30, blinkflag);
+    }
+    else if(actualField.clawContents == SPENT_ROD)
+    {
+      mainBluetooth.sendSpentRadiation();
+      digitalWrite(30, blinkflag);
+      digitalWrite(30, blinkflag);
+    }
+    else
+    {
+     digitalWrite(30, LOW);
+     digitalWrite(30, LOW);
+    }
     if(DEBUG)Serial.println("Timer Tick!");
     beatFlag = 0;
   }
   if(DEBUG) debug(&lineSensor, &leftMotor, &rightMotor, &move);
+  if(mainActuation.moveDown())
+   mainActuation.closeClaw();
+  else
+   mainActuation.openClaw();
+  move.followLine(0);
+  /*
   if(move.to(destination, DEFSPEED))
   {
    switch(destination)
@@ -129,6 +165,7 @@ void loop(){
      
     }
   }
+  //*/
   mainActuation.updateClaw();
 //move.forward(150, 200, 0);
   // if(i == 0) i += move.forward(150, 250, 0);
@@ -167,4 +204,9 @@ void _reachDown()
 {
   mainActuation.downReach();
 }
+/*
+void _reachMid()
+{
+  main.Actuation.midReach();
+}*/
 

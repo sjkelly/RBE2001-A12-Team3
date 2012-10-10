@@ -6,15 +6,15 @@
 
 /** Values to send to Vex Motors**/
 #define GOUP 50
-#define GODOWN 130
-#define FACEUP 127
-#define FACEDOWN 15
+#define GODOWN 150
+#define FACEUP 90
+#define FACEDOWN 8
 #define STILL 90
-#define OPEN 90
+#define OPEN 0
 #define CLOSE 250
 
 //Enumerated states for the position of the lift and claw
-enum actLiftState {UP=1, DOWN=0};
+enum actLiftState {UP=1, DOWN=2};
 enum actClawState {CLOSED=1, OPENED = 0};
 
 class Actuation
@@ -39,6 +39,7 @@ class Actuation
   //These two change hook into the interrupts triggered by the limit switches to track the position of the manipulator
   void downReach();
   void upReach();
+  void midReach();
   //closeClaw and openClaw only change the desired state of the claw, updateClaw is what actually changes it.
   void closeClaw();
   void openClaw();

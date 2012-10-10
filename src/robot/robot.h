@@ -8,7 +8,7 @@
 #define START_X 3 //starting x coordinate on the field
 #define START_Y 2 //starting y coordinate on the field
 
-#define DEF_SPEED 100 //default speed
+
 
 #define SERVO_RESPONSE 10 //time servo takes to respon in milliseconds
 #define START_CLAW CLOSED
@@ -22,6 +22,8 @@
 
 #define TOP_BUMPER 1
 #define BOT_BUMPER 0
+#define TOP_BUMPERPHYS 3
+#define BOT_BUMPERPHYS 2
 #define BUMPER_PIN 18
 
 #define LEFT_1A 33

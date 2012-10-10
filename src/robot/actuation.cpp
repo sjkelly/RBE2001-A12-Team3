@@ -11,6 +11,7 @@ Actuation::Actuation(Servo* _clawServo, Servo* _wristServo, Servo* _liftServo, u
  botPin  = _botPin;
  currentClaw = START_CLAW;
  desiredClaw = START_CLAW;
+ //currentLiftState = MID;
 }
 
 uint8_t Actuation::moveUp()
@@ -18,6 +19,7 @@ uint8_t Actuation::moveUp()
  if(currentLiftState != UP)
  {
   liftServo->write( GOUP);
+  wristServo->write(FACEDOWN);
   return 0;
  }
  else
@@ -32,7 +34,7 @@ uint8_t Actuation::moveDown()
 {
  if(currentLiftState != DOWN)
  {
-  liftServo->write( GODOWN);
+  liftServo->write(GODOWN);
   wristServo->write(FACEDOWN);
   return 0;
  }
@@ -51,6 +53,11 @@ void Actuation::upReach()
 {
  currentLiftState = UP;
 }
+/*
+void Actuation::midReach()
+{
+ currentLiftState = MID;
+}*/
 
 void Actuation::closeClaw()
 {
