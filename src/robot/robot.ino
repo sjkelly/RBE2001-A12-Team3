@@ -173,6 +173,7 @@ void loop(){
     if(actualField.clawContents == NO_ROD) //if we are not holding a rod, the claw should be open
      mainActuation.openClaw();
     else
+    {
      mainActuation.closeClaw(); //if we are holding a rod, the claw should be closed so we don't drop it
      
      mainActuation.moveUp(); //no matter where we are going, our claw should be up
