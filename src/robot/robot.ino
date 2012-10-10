@@ -14,7 +14,7 @@ void resetField(fieldState *_fieldstate);
 
 //Object Constructors
 fieldState actualField;
-uint8_t destination = REACTOR_A;
+uint8_t destination = REACTOR_;
 uint8_t blinkflag;
 LineSensor lineSensor(LINE_SENSOR_CHARGE_US,LINE_SENSOR_READ_US);
 Motor leftMotor(LEFT_ENCODER,LEFT_DRIVE,LEFT_1A,LEFT_2A,LEFT_PROPORTION);
@@ -119,71 +119,64 @@ void loop(){
       break; 
     }
   }
-  else if(!startUp && move.to(destination, DEFSPEED))
+  else if(!startUp && move.to(destination, DEFSPEED)) //check if an action has completed
   {
-   switch(destination)
+   switch(destination) //what we should do is determined by where we have just arrived
    {
-    case REACTOR_A:
+    case REACTOR_A: //if we are at a reactor
     case REACTOR_B:
-     if((destination == REACTOR_A)?actualField.reactorA:actualField.reactorB == SPENT_ROD)
+     if((destination == REACTOR_A)?actualField.reactorA:actualField.reactorB == SPENT_ROD) //if there is a spent rod in the reactor tube
      {
-       mainActuation.closeClaw();
-      if(mainActuation.moveUp())//insert actuation code here, check for successful completion
+      if(mainActuation.moveDown))//on successful move, move down in order to get rod
       {
-       actualField.clawContents = SPENT_ROD;
-       (destination == REACTOR_A)?actualField.reactorA:actualField.reactorB = NO_ROD;
-       destination = theDecider.determineDest();
+       mainActuation.closeClaw();//close claw, grab rod
+       actualField.clawContents = SPENT_ROD; //robot is holding a spent rod
+       (destination == REACTOR_A)?actualField.reactorA:actualField.reactorB = NO_ROD; //no more rod in the reactor
+       destination = theDecider.determineDest(); //go to a new place
       }
-    }
-     else
-     {
-      if(mainActuation.moveDown())//inserto actuation code, check for sucessful complettion
+      else //if still moving down, make sure that the claw is open to grab rod
       {
         mainActuation.openClaw();
-       (destination == REACTOR_A)?actualField.reactorA:actualField.reactorB = NEW_ROD;
-       destination = theDecider.determineDest();
-       actualField.clawContents = NO_ROD;
+      }
+     }
+     else //if there is no rod in there
+     {
+      if(mainActuation.moveDown())//move down to insert the rod in
+      {
+        mainActuation.openClaw(); //open the claw, drop rod in
+       actualField.clawContents = NO_ROD; //we are no longer holding a rod
+       (destination == REACTOR_A)?actualField.reactorA:actualField.reactorB = NEW_ROD; //there is now a new rod in the reactor
+       destination = theDecider.determineDest(); //go to a new place
+
       }
      }
      break;
-    case SPENT_1:
+    case SPENT_1:   //if we are at a storage tube
     case SPENT_2:
     case SPENT_3:
     case SPENT_4:
-     mainActuation.openClaw();   
-     actualField.clawContents = NO_ROD;
-     destination = theDecider.determineDest();
+     mainActuation.openClaw();//open the claw to drop spent rod in   
+     actualField.clawContents = NO_ROD; //we are no longer holding a rod
+     destination = theDecider.determineDest(); //go somewhere else
      break;
-    case NEW_1:
+    case NEW_1: //if we are at a supply tube
     case NEW_2:
     case NEW_3:
     case NEW_4:
-     mainActuation.closeClaw();
-     actualField.clawContents = NEW_ROD;
-     destination = theDecider.determineDest();
+     mainActuation.closeClaw(); //close claw to grab new rod
+     actualField.clawContents = NEW_ROD; //we are now holding a new rod
+     destination = theDecider.determineDest(); // go somewhere else
      
    }
   }
-  else
+  else //if we are currently in the middle of moving somewhere
   {
-    switch(destination)
-    {
-     case NEW_1:
-     case NEW_2:
-     case NEW_3:
-     case NEW_4:
-     case SPENT_1:
-     case SPENT_2:
-     case SPENT_3:
-     case SPENT_4:
-      mainActuation.moveUp();
-      break;
-     case REACTOR_A:
-     case REACTOR_B:
-      if(actualField.clawContents == NO_ROD)
-       mainActuation.moveDown();
-      
+    if(actualField.clawContents == NO_ROD) //if we are not holding a rod, the claw should be open
+     mainActuation.openClaw();
+    else
+     mainActuation.closeClaw(); //if we are holding a rod, the claw should be closed so we don't drop it
      
+     mainActuation.moveUp(); //no matter where we are going, our claw should be up
     }
   }
   mainActuation.updateClaw();
