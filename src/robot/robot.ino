@@ -38,9 +38,9 @@ void setup(){
   digitalWrite(3, HIGH);
   //blink LEDs
   pinMode(30, OUTPUT);
-  pinMode(33, OUTPUT);
+  pinMode(31, OUTPUT);
   digitalWrite(30, LOW);
-  digitalWrite(33, LOW);
+  digitalWrite(31, LOW);
   //Attaching all of our interrupts
   attachInterrupt(leftMotor.interruptPin,leftEncoderISR,CHANGE);
   attachInterrupt(rightMotor.interruptPin,rightEncoderISR,CHANGE);
@@ -56,7 +56,6 @@ void setup(){
   MsTimer2::start();
   resetField(&actualField);
   destination = theDecider.determineDest();
-  mainActuation.moveUp();
 }
 
 
@@ -75,18 +74,18 @@ void loop(){
     {
      mainBluetooth.sendNewRadiation();
      digitalWrite(30, blinkflag);
-     digitalWrite(30, blinkflag);
+     digitalWrite(31, blinkflag);
     }
     else if(actualField.clawContents == SPENT_ROD)
     {
       mainBluetooth.sendSpentRadiation();
       digitalWrite(30, blinkflag);
-      digitalWrite(30, blinkflag);
+      digitalWrite(31, blinkflag);
     }
     else
     {
      digitalWrite(30, LOW);
-     digitalWrite(30, LOW);
+     digitalWrite(31, LOW);
     }
     if(DEBUG)Serial.println("Timer Tick!");
     beatFlag = 0;
@@ -99,19 +98,20 @@ void loop(){
     switch(startSequence)
     {
     case 0:
-      startSequence += move.forward(50,DEFSPEED, 0); 
+
+      startSequence += move.forward(FIELD_Y/2,DEFSPEED, 0); 
       break;  
     case 1:
       startSequence += move.turn(90, DEFSPEED); 
       break;
     case 2:
-      startSequence += move.forward(50,DEFSPEED, 0); 
+      startSequence += move.forward(FIELD_X/2,DEFSPEED, 0); 
       break;
     case 3:
       startSequence += move.turn(90,DEFSPEED); 
       break;
     case 4:
-      startSequence += move.forward(70,DEFSPEED, 1);
+      startSequence += move.forward(FIELD_Y/2,DEFSPEED, 1);
       break;
     case 5: 
       startUp = 0;
