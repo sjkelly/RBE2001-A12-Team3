@@ -77,11 +77,11 @@ uint8_t Move::turn(int16_t angle, int16_t speed){
  if(turning && leftMotor->getDistance()<=turnTarget && rightMotor->getDistance()<=turnTarget){
    if(angle > 0){
      leftMotor->drive(speed*-1);
-     rightMotor->drive(speed*0.9);
+     rightMotor->drive(speed);
    }
    else if(angle < 0){
      leftMotor->drive(speed);
-     rightMotor->drive(speed*-0.9);
+     rightMotor->drive(speed*-1);
    }
    if (angle%90 == 0 && lineSensor->rearRight && lineSensor->rearLeft && lineSensor->consecutiveStates >= LINE_SENSOR_CONSECUTIVE_READS && 
        leftMotor->getDistance() >= turnTarget - 2 && rightMotor->getDistance() > turnTarget - 2){

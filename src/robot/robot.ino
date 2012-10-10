@@ -63,9 +63,9 @@ void loop(){
   }
   if(DEBUG) debug(&lineSensor, &leftMotor, &rightMotor, &move);
   
-  rightMotor.drive(DEFSPEED);
-  leftMotor.drive(DEFSPEED);
-  /*
+ // rightMotor.drive(DEFSPEED);
+ // leftMotor.drive(DEFSPEED);
+
   //startup sequence to get us to the reactor at the start
   if(startUp){
     switch(startSequence)
@@ -129,7 +129,6 @@ void loop(){
      break;
    }
   }   
-  */
 }
 //A helper that resets the field state
 void resetField(fieldState *_fieldstate)
