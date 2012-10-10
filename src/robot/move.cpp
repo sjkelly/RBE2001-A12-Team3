@@ -179,7 +179,7 @@ uint8_t Move::to(uint8_t target, int16_t speed)
    break;
   case SPENT_4:
    destcoord.x = 6;
-   destcoord.y = 5;
+   destcoord.y = 1;
    break;
   case NEW_1:
    destcoord.x = 3;
@@ -197,10 +197,10 @@ uint8_t Move::to(uint8_t target, int16_t speed)
    destcoord.x = 6;
    destcoord.y = 5;
  }
- coord relative;
+ coord relative;  //here we figure out where we are relative to where we have to go
  relative.x = destcoord.x = position.x;
  relative.y = destcoord.y = position.y;
- if(relative.x == 0 && relative.y == 0)
+ if(relative.x == 0 && relative.y == 0) //if we are where we need to go, set the positon to our destinaton, and return a sucessful move
  { 
   position.x = destcoord.x;	 
   position.y = destcoord.y;
@@ -210,59 +210,60 @@ uint8_t Move::to(uint8_t target, int16_t speed)
  //it is in the middle column
  switch (relative.y)
  {
-  case 4:
+  case 4:   //if we have to move vertically across the entire field we have to back out
   case -4:
-   if(forward(25, -DEFSPEED, 3))
-    position.y += (relative.y > 0)?-1:1; //also think about setting direction here
+   if(forward(25, -DEFSPEED, 3))  //back out
+    position.y += (relative.y > 0)?-1:1; //increment the position, also think about setting direction here
    break;
-  case 3:
+  case 3: //if we have backed out, we need to start traversing the field
   case -3:
-   if(matchDirection((relative.y > 0)?NORTH:SOUTH))
+   if(matchDirection((relative.y > 0)?NORTH:SOUTH)) //turn to the correct direction
    {
-    if(forward(HEIGHT_DISTANCE, DEFSPEED, 1))
+    if(forward(HEIGHT_DISTANCE, DEFSPEED, 1)) //once we have matched the direction, start actually moving down the field by line following
     {
-     position.y += (relative.y > 0)?-1:1;
+     position.y += (relative.y > 0)?-1:1; //once we have finished moving, update our position by an increment
     }
    } 
-  case 0: //this means it is going to a reactor tube
-   if(abs(relative.x) == 1)
+  case 0: //this means we are going to a reactor tube
+   if(abs(relative.x) == 1) //if we are only one away, we need to align to the reactor tube
    {
-     if(forward(100, DEFSPEED, 3))
-      position.y += (relative.y > 0)?-1:1; //also think about setting direction here
+     if(forward(100, DEFSPEED, 3)) //this will ensure that the move forward is only tripped by the front bumper
+      position.y += (relative.y > 0)?-1:1; //when it is tripped, we need to update our position, also think about setting direction here
    }
   case 2:
   case -2:
-   if(position.x == 1 || position.x == 8)
+   if(position.x == 1 || position.x == 8) //if we are already at a reactor, we need to back out or we are at a tube and we need to back out
    {
-     if(forward(25, -DEFSPEED, 3))
-       position.x += (relative.x > 0)?-1:1; //also think about setting direction here
+     if(forward(25, -DEFSPEED, 3)) //back out
+       {
+        position.x += (relative.x > 0)?-1:1; //update our position by an increment, also think about setting direction here
+       }
      
    }
-   else if(relative.x !=0)
+   else if(relative.x !=0)  //if we are not at the coordinate we want to be at, we need to get there
    { 
-    if(matchDirection((relative.x > 0)?EAST:WEST))
+    if(matchDirection((relative.x > 0)?EAST:WEST)) //turn to the direction we need to be facing
     {  
-      if(forward(500, DEFSPEED, relative.x ))
+      if(forward(500, DEFSPEED, relative.x )) //then we actually need to move to the correct position
       {
-       position.x = (relative.y != 0)?0:(relative.x > 0)?1:-1;
+       position.x = (relative.y != 0)?0:(relative.x > 0)?1:-1; //and finally increment our position when we have completed the move
       }
-   
     }
    }
-   else if(relative.y != 0); 
+   else if(relative.y != 0); //finally, now that we are at the x coordinate that we want, we have to move across the field verticallly 
    {
-    if(matchDirection((relative.y > 0)?NORTH:SOUTH))
+    if(matchDirection((relative.y > 0)?NORTH:SOUTH)) // face the right direction
     {
-     if(forward(HEIGHT_DISTANCE, DEFSPEED, 1))
+     if(forward(HEIGHT_DISTANCE, DEFSPEED, 1)) //move across the y field
      {
-      position.y += (relative.y > 0)?-1:1;
+      position.y += (relative.y > 0)?-1:1; //and increment our position on a sucessful move
      }
     }
    }
    break;
-  case 1:
+  case 1: //we are one vertical move away from moving across the field
   case -1:
-    if(forward(100, DEFSPEED, 3))
+    if(forward(100, DEFSPEED, 3)) //move vertically for the last time
       position.y += (relative.y > 0)?-1:1; //also think about setting direction here
    break;
   }

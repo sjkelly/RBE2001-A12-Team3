@@ -5,8 +5,8 @@
 #define LENGTH_DISTANCE 10 //distance to move side to side between storage tubes, in cm
 #define REACTOR_PATH 15 //discance to the reactor in cm
 
-#define START_X 3 //starting x coordinate on the field
-#define START_Y 2 //starting y coordinate on the field
+#define START_X 1 //starting x coordinate on the field
+#define START_Y 3//starting y coordinate on the field
 
 
 
