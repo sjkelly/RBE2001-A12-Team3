@@ -119,7 +119,7 @@ void loop(){
       break; 
     }
   }
-  else if(!startUp && move.to(destination, DEFSPEED)) //check if an action has completed
+  else if(!startUp && move.to(destination, DEFSPEED)) //check if an action has completed and that we are not in the startup section
   {
    switch(destination) //what we should do is determined by where we have just arrived
    {
